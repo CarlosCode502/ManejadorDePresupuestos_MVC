@@ -1,0 +1,18 @@
+﻿@*
+    //V# 100 FORMULARIO TIPOS CUENTAS
+*@
+@{
+    ViewData["Title"] = "Crear Tipo de Cuenta";
+}
+
+<h1 class="text-uppercase">Crear tipo de cuenta</h1>
+<h5>El tipo de cuenta se regiere a como podemos agrupar cuentas. Ejemplos: <strong>Préstamos, tarjetas de crédito, etc.</strong></h5>
+
+<form asp-controller="TiposCuentas" asp-action="Crear">
+    <div class="mb-3">
+        <label for="Nombre" class="form-label">Nombre</label>
+        <input type="text" id="Nombre" name="Nombre" class="form-control"/>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Enviar</button>
+</form>
