@@ -1,17 +1,36 @@
 ﻿@*
     //V# 100 FORMULARIO TIPOS CUENTAS
 *@
+
+@model TipoCuentaViewModel
+
 @{
     ViewData["Title"] = "Crear Tipo de Cuenta";
 }
 
 <h1 class="text-uppercase">Crear tipo de cuenta</h1>
-<h5>El tipo de cuenta se regiere a como podemos agrupar cuentas. Ejemplos: <strong>Préstamos, tarjetas de crédito, etc.</strong></h5>
+<div class="gy-4">
+    <h5>El tipo de cuenta se refiere a como podemos agrupar cuentas. </h5>
+    <h5> <strong>Ejemplos:</strong> Préstamos, tarjetas de crédito, etc.</h5>
+</div>
 
-<form asp-controller="TiposCuentas" asp-action="Crear">
+@* //V#102 Visualizando los Errores de validación *@
+@* Este Taghelper nos ayuda a mostrar los errores de validación de todos los campos en texto rojo *@
+<div asp-validation-summary="All" class="text-danger"></div>
+
+@* No es necesario utilizar el taghelper asp-controller ya que directamente se esta dirigiendo al contrlador *@
+<form asp-controller="TiposCuentas" asp-action="Crear" method="post">
     <div class="mb-3">
-        <label for="Nombre" class="form-label">Nombre</label>
-        <input type="text" id="Nombre" name="Nombre" class="form-control"/>
+        @*V#103 Tag Helpers para los Campos*@
+        @*Para evitar que se eliminen los campos al lanzar una validación*@
+
+        @*Se cambia esto *@
+        @* <label for="Nombre" class="form-label">Nombre</label>
+        <input type="text" id="Nombre" name="Nombre" class="form-control"/> *@
+
+        @*Por esto*@
+        <label asp-for="Nombre" class="form-label"></label>
+        <input type="text" asp-for="Nombre" class="form-control"/>
     </div>
 
     <button type="submit" class="btn btn-primary">Enviar</button>
