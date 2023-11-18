@@ -21,7 +21,7 @@
 @* No es necesario utilizar el taghelper asp-controller ya que directamente se esta dirigiendo al contrlador *@
 <form asp-controller="TiposCuentas" asp-action="Crear" method="post">
     <div class="mb-3">
-        @*V#103 Tag Helpers para los Campos*@
+        @*V#103 Tag Helpers para los Campos*@        
         @*Para evitar que se eliminen los campos al lanzar una validación*@
 
         @*Se cambia esto *@
@@ -31,6 +31,26 @@
         @*Por esto*@
         <label asp-for="Nombre" class="form-label"></label>
         <input type="text" asp-for="Nombre" class="form-control"/>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Email" class="form-label"></label>
+        <input asp-for="Email" class="form-control"/>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Edad" class="form-label"></label>
+        <input type="number" asp-for="Edad" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="URL" class="form-label"></label>
+        <input asp-for="URL" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="TarjetaDeCredito" class="form-label"></label>
+        <input asp-for="TarjetaDeCredito" class="form-control" />
     </div>
 
     <button type="submit" class="btn btn-primary">Enviar</button>
