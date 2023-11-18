@@ -21,7 +21,9 @@ namespace ManejadorDePresupuestos_MVC.Models
         [Required(ErrorMessage = "* El campo {0} es obligatorio.")]
         [StringLength(maximumLength:50, MinimumLength = 3, ErrorMessage = "La longitud del campo {0} debe ser mayor a {2} y menor a {1}")]
         public string Nombre { get; set; }
+        [Required]
         public int UsuarioId { get; set; }
+        [Required]
         public int Orden { get; set; }
 
         /*PRUEBAS DE VALIDACIONES POR DEGECTO*/

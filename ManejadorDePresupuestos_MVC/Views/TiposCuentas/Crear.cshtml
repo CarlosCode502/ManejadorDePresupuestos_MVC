@@ -31,11 +31,16 @@
         @*Por esto*@
         <label asp-for="Nombre" class="form-label"></label>
         <input type="text" asp-for="Nombre" class="form-control"/>
+
+        @*V#106 Validación en el Front-End*@
+        @* Este script contiene una validación para el campo nombre y muestra un texto en rojo al tener un error. *@
+        <script asp-validation-for="Nombre" class="text-danger"></script>
     </div>
 
     <div class="mb-3">
         <label asp-for="Email" class="form-label"></label>
         <input asp-for="Email" class="form-control"/>
+        <script asp-validation-for="Email" class="text-danger"></script>
     </div>
 
     <div class="mb-3">
