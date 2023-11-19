@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using ManejadorDePresupuestos_MVC.Validations;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection.Metadata;
 using System.Timers;
@@ -21,6 +22,7 @@ namespace ManejadorDePresupuestos_MVC.Models
         //V#102 Visualizando los Errores de validación
         [Required(ErrorMessage = "* El campo {0} es requerido.")]
         [StringLength(maximumLength:50, MinimumLength = 3, ErrorMessage = "La longitud del campo {0} debe ser mayor a {2} y menor a {1}")]
+        [PrimerLetraMayuscula]    //V#107 Validaciones personalizadas por atributos (no es necesario poner el Attribute)
         public string Nombre { get; set; }
 
         [Required(ErrorMessage = "* El campo {0} es requerido.")]
