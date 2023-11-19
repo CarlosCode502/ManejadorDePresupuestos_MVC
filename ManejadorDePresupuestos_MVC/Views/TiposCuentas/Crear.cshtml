@@ -32,31 +32,39 @@
         <label asp-for="Nombre" class="form-label"></label>
         <input type="text" asp-for="Nombre" class="form-control"/>
 
-        @*V#106 Validación en el Front-End*@
+        @*V#106 Validación en el Front-End (Lado del cliente)*@
         @* Este script contiene una validación para el campo nombre y muestra un texto en rojo al tener un error. *@
-        <script asp-validation-for="Nombre" class="text-danger"></script>
+        <span asp-validation-for="Nombre" class="text-danger"></span>
     </div>
 
-    <div class="mb-3">
+    @* <div class="mb-3">
         <label asp-for="Email" class="form-label"></label>
         <input asp-for="Email" class="form-control"/>
-        <script asp-validation-for="Email" class="text-danger"></script>
+        <span asp-validation-for="Email" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
         <label asp-for="Edad" class="form-label"></label>
-        <input type="number" asp-for="Edad" class="form-control" />
+        <input asp-for="Edad" class="form-control" />
+        <span asp-validation-for="Edad" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
         <label asp-for="URL" class="form-label"></label>
         <input asp-for="URL" class="form-control" />
+        <span asp-validation-for="URL" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
         <label asp-for="TarjetaDeCredito" class="form-label"></label>
         <input asp-for="TarjetaDeCredito" class="form-control" />
+        <span asp-validation-for="TarjetaDeCredito" class="text-danger"></span>
     </div>
-
+ *@
     <button type="submit" class="btn btn-primary">Enviar</button>
 </form>
+
+@*V#106 Validación en el Front-End (Lado del cliente)*@
+@section Scripts{
+    <partial name="_ValidationScriptsPartial.cshtml" />
+}

@@ -41,9 +41,13 @@
             &copy; 2023 - ManejadorDePresupuestos_MVC - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @*V#106 Validación en el Front-End (Lado del cliente)*@
+    @* Aquí se van a renderizar todos los scripts que aquí se encuentren *@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
