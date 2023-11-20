@@ -47,19 +47,20 @@ namespace ManejadorDePresupuestos_MVC.Services
         #endregion
 
         //V#112 Aplicando la programación Asíncrona(Es útil cuando existe una comunicación con externos)
+        //Task (es como un void asincrono)
         //V#110 Insertando un Tipo de Cuenta en la Base de Datos (Creando el Repositorio)
         /// <summary>
         /// Permite crear un TipoCuenta en la BD.
         /// </summary>
         /// <param name="tipoCuentaViewModel">Recibe el modelo de TipoCuentaViewModel</param>
-        public void Crear(TipoCuentaViewModel tipoCuentaViewModel) //Ctrl + . para agregar al IRepositorio
+        public async Task Crear(TipoCuentaViewModel tipoCuentaViewModel) //Ctrl + . para agregar al IRepositorio
         {
             //Abre una nueva conexión
             using var connection = new SqlConnection(connectionString);
 
             //Consulta que obtiene el id(int) del registro
             //Dapper -> QuerySingle (Realiza un query que va a obtener un solo resultado). 
-            var id = connection.QuerySingle<int>
+            var id = await connection.QuerySingleAsync<int>
                 ($@"INSERT INTO Tbl_TiposCuentas_Sys (Nombre, UsuarioId, Orden)
                     Values (@Nombre, @UsuarioId, 0);
                     SELECT SCOPE_IDENTITY();", tipoCuentaViewModel); //SCOPE_IDENTITY() -> Trae el id del registro creado

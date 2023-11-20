@@ -82,8 +82,9 @@ namespace ManejadorDePresupuestos_MVC.Controllers
         #endregion
 
         //V#112 Aplicando la programación Asíncrona
+        //Task<> (Debe devolver un valor)
         [HttpPost]
-        public IActionResult Crear(TipoCuentaViewModel tipoCuentaViewModel)
+        public async Task<IActionResult> Crear(TipoCuentaViewModel tipoCuentaViewModel)
         {
             //V#101 VALIDANDO EL FORMULARIO( Nunca confiar en la data que envía el usuario)
             //Si el modelo no es valido retornar el tipo cuenta 
@@ -96,7 +97,7 @@ namespace ManejadorDePresupuestos_MVC.Controllers
             //V#110 Insertando un Tipo de Cuenta en la Base de Datos (Inyectando el servicio repo)
             //ANTES DE AGREGAR SE DEBIA CREAR UN USUARIO contra abcd
             tipoCuentaViewModel.UsuarioId = 1;//Vamos a crear un usuario desde aquí
-            repositorioTiposCuentas.Crear(tipoCuentaViewModel);//Accedemos al repositorio y metodo crear luego pasamos el modelo
+            await repositorioTiposCuentas.Crear(tipoCuentaViewModel);//Accedemos al repositorio y metodo crear luego pasamos el modelo
 
             return View();
         }
