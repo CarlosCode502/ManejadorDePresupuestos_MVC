@@ -97,12 +97,34 @@ namespace ManejadorDePresupuestos_MVC.Controllers
             //V#110 Insertando un Tipo de Cuenta en la Base de Datos (Inyectando el servicio repo)
             //ANTES DE AGREGAR SE DEBIA CREAR UN USUARIO contra abcd
             tipoCuentaViewModel.UsuarioId = 1;//Vamos a crear un usuario desde aquí
+
+
+            #region //V# 113 Validaciones personalizadas a Nivel del Controlador 
+            //(Para evitar que un usuario pueda registrar 2 veces la misma cuenta)
+            //Obtiene el resultado de la validación a nivel de controlador
+            //Retorna verdadero(si existe) y falso (si no existe)
+            var yaExisteTipoCuenta =
+                await repositorioTiposCuentas.Existe(tipoCuentaViewModel.Nombre, tipoCuentaViewModel.UsuarioId);
+
+            //Si es verdadero entonces se agrega un error
+            if (yaExisteTipoCuenta)
+            {
+                //Se crea el msj de error en base al modelo (a nivel de campo)
+                ModelState.AddModelError(nameof(tipoCuentaViewModel.Nombre), //Se especifica el campo
+                    $"El nombre {tipoCuentaViewModel.Nombre} ya existe."); //Msj personalizado 
+
+                //Si ya existe, lógicamente no se podrá agregar por lo que se vuelve a retornar el valor ingresado
+                return View(tipoCuentaViewModel);
+            }
+
+            //Si no existe salta y se crea el registro
+            #endregion
+
+
+            //V#110 Insertando un Tipo de Cuenta en la Base de Datos (Inyectando el servicio repo)
             await repositorioTiposCuentas.Crear(tipoCuentaViewModel);//Accedemos al repositorio y metodo crear luego pasamos el modelo
 
             return View();
         }
-
-
     }
 }
-

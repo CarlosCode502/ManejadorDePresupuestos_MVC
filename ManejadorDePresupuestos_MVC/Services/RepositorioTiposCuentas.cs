@@ -72,15 +72,27 @@ namespace ManejadorDePresupuestos_MVC.Services
 
         //V# 113 Validaciones personalizadas a Nivel del Controlador 
         //Creando un método que valide si existe un TipoCuenta para determinado usuario
+        /// <summary>
+        /// Método asíncrono que valida si un usario ya tiene 1 TipoCuenta
+        /// </summary>
+        /// <param name="nombre">Se asigna el nombre de la BD</param>
+        /// <param name="usuarioId">Se asigna el usuarioId de la BD</param>
+        /// <returns>Un booleano  (true o false), 1 si existe y 0 si no</returns>
         public async Task<bool> Existe(string nombre, int usuarioId)
         {
+            //Obtenemos y abre la cadena de conexión
             using var connection2 = new SqlConnection(connectionString);
 
+            //Se crea la consulta para traer al PrimerElementoOPordefecto que se encuentre (Dapper)
+            //QueryFirstOrDefaultAsync Obtiene el primero que encuentre o un valor por defecto(igual a 0)
             var existe = await connection2.QueryFirstOrDefaultAsync<int>
+                //Select 1 obtiene el primer registro de la tabla cuando nombre y usuarioId correspondan
                 (@"SELECT 1 
                 FROM Tbl_TiposCuentas_Sys
                 WHERE Nombre = @Nombre AND UsuarioId = @UsuarioId;", new {nombre, usuarioId});
+            //Funciona muy bien para ver la existencia de un registro sin traer el registro(para mostrarlo)
 
+            //Como el método recibe un boleano se le envia si es (true -> 1 o false -> 0)
             return existe == 1;
         }
     }

@@ -10,5 +10,7 @@ namespace ManejadorDePresupuestos_MVC.Services
         //V#112 Aplicando la programación Asíncrona(Es útil cuando existe una comunicación con externos)
         //Debe ser acorde al método asyncrono
         Task Crear(TipoCuentaViewModel tipoCuentaViewModel);
+        //V#113 Validaciones personalizadas a Nivel del Controlador
+        Task<bool> Existe(string nombre, int usuarioId);
     }
 }
