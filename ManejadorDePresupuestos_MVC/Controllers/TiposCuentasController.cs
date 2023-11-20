@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using ManejadorDePresupuestos_MVC.Models;
+using ManejadorDePresupuestos_MVC.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 
@@ -11,20 +12,34 @@ namespace ManejadorDePresupuestos_MVC.Controllers
     public class TiposCuentasController : Controller
     {
 
-        #region //V#109 Comunicandonos con la Base de datos - Connection Strings (Realizando un prueba de conexion)
-        /// <summary>
-        /// Campo para asignar la cadena de conexion
-        /// </summary>
-        private readonly string connectionString;
+        #region Campos creados luego de Inyección de dependencias
+        //V#110 Insertando un Tipo de Cuenta en la Base de Datos (Inyectando el servicio repo)
+        private readonly IRepositorioTiposCuentas repositorioTiposCuentas; 
+        #endregion
 
-        /// <summary>
-        /// Constructor que contiene la Interfaz IConfiguration.
-        /// </summary>
-        /// <param name="configuration">Recibe o obtiene la Cadena de conexión de los perfiles de configuración</param>
-        public TiposCuentasController(IConfiguration configuration)
+        //V#110 Insertando un Tipo de Cuenta en la Base de Datos (Inyectando el servicio repo)
+        public TiposCuentasController(IRepositorioTiposCuentas repositorioTiposCuentas) 
         {
-            connectionString = configuration.GetConnectionString("DefaultConnection"); //Igual que en proveedores de configuración
+            #region Creado luego de Ctrl + . create and a field 
+            this.repositorioTiposCuentas = repositorioTiposCuentas; 
+            #endregion
         }
+
+
+        #region //V#109 Comunicandonos con la Base de datos - Connection Strings (Realizando un prueba de conexion)
+        ///// <summary>
+        ///// Campo para asignar la cadena de conexion
+        ///// </summary>
+        //private readonly string connectionString;
+
+        ///// <summary>
+        ///// Constructor que contiene la Interfaz IConfiguration.
+        ///// </summary>
+        ///// <param name="configuration">Recibe o obtiene la Cadena de conexión de los perfiles de configuración</param>
+        //public TiposCuentasController(IConfiguration configuration)
+        //{
+        //    connectionString = configuration.GetConnectionString("DefaultConnection"); //Igual que en proveedores de configuración
+        //}
         #endregion
 
         /// <summary>
@@ -34,29 +49,59 @@ namespace ManejadorDePresupuestos_MVC.Controllers
         [HttpGet]
         public IActionResult Crear()
         {
-            //Abrimos la conexión (pasamos la cadena de conexion obtenuda en el constructor)
-            using (var connection = new SqlConnection(connectionString))
-            {
-                //Ejecutamos una consulta a la bd con la palabra Query(Importa y utiliza Dapper)
-                var query = connection.Query("SELECT 1").FirstOrDefault();
-            }
+            ////V#109 Comunicandonos con la Base de datos - Connection Strings
+            ////Abrimos la conexión (pasamos la cadena de conexion obtenuda en el constructor)
+            //using (var connection = new SqlConnection(connectionString))
+            //{
+            //    //Ejecutamos una consulta a la bd con la palabra Query(Importa y utiliza Dapper)
+            //    var query = connection.Query("SELECT 1").FirstOrDefault(); //SELECT 1 devuelve un 1
+            //}
 
-                return View();
+            return View();
         }
-        
+
+        #region //Antes de V#112 Aplicando la programación Asíncrona
+        //[HttpPost]
+        //public IActionResult Crear(TipoCuentaViewModel tipoCuentaViewModel)
+        //{
+        //    //V#101 VALIDANDO EL FORMULARIO( Nunca confiar en la data que envía el usuario)
+        //    //Si el modelo no es valido retornar el tipo cuenta 
+        //    if (!ModelState.IsValid)
+        //    {
+        //        //De esta manera se devuelve lo que ha escrito el usuario
+        //        return View(tipoCuentaViewModel);
+        //    }
+
+        //    //V#110 Insertando un Tipo de Cuenta en la Base de Datos (Inyectando el servicio repo)
+        //    //ANTES DE AGREGAR SE DEBIA CREAR UN USUARIO contra abcd
+        //    tipoCuentaViewModel.UsuarioId = 1;//Vamos a crear un usuario desde aquí
+        //    repositorioTiposCuentas.Crear(tipoCuentaViewModel);//Accedemos al repositorio y metodo crear luego pasamos el modelo
+
+        //    return View();
+        //} 
+        #endregion
+
+        //V#112 Aplicando la programación Asíncrona
         [HttpPost]
         public IActionResult Crear(TipoCuentaViewModel tipoCuentaViewModel)
         {
             //V#101 VALIDANDO EL FORMULARIO( Nunca confiar en la data que envía el usuario)
-            //Si el modelo no es valido retornar el tipo cuenta
+            //Si el modelo no es valido retornar el tipo cuenta 
             if (!ModelState.IsValid)
             {
                 //De esta manera se devuelve lo que ha escrito el usuario
                 return View(tipoCuentaViewModel);
             }
 
+            //V#110 Insertando un Tipo de Cuenta en la Base de Datos (Inyectando el servicio repo)
+            //ANTES DE AGREGAR SE DEBIA CREAR UN USUARIO contra abcd
+            tipoCuentaViewModel.UsuarioId = 1;//Vamos a crear un usuario desde aquí
+            repositorioTiposCuentas.Crear(tipoCuentaViewModel);//Accedemos al repositorio y metodo crear luego pasamos el modelo
+
             return View();
         }
+
+
     }
 }
 

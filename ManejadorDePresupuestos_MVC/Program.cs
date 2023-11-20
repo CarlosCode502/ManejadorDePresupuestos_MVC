@@ -1,7 +1,12 @@
+using ManejadorDePresupuestos_MVC.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+//V#110 Insertando un Tipo de Cuenta en la Base de Datos (Agregando el servicio repo)
+builder.Services.AddTransient<IRepositorioTiposCuentas, RepositorioTiposCuentas>(); //Es AddTrasient ya que no se comparte
 
 var app = builder.Build();
 
