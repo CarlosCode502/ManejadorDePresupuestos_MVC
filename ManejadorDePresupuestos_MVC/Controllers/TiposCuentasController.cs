@@ -116,15 +116,37 @@ namespace ManejadorDePresupuestos_MVC.Controllers
                 //Si ya existe, lógicamente no se podrá agregar por lo que se vuelve a retornar el valor ingresado
                 return View(tipoCuentaViewModel);
             }
-
             //Si no existe salta y se crea el registro
             #endregion
-
 
             //V#110 Insertando un Tipo de Cuenta en la Base de Datos (Inyectando el servicio repo)
             await repositorioTiposCuentas.Crear(tipoCuentaViewModel);//Accedemos al repositorio y metodo crear luego pasamos el modelo
 
             return View();
+        }
+
+        //V#114 Validaciones personalizadas con JavaScript utilizando Remote
+        //Por medio de una accion httpget validamos si el usuario contiene un TipoCuenta ya registrado
+        //Y genera un texto por medio de Json el cual recibira Remote de JS con el msj de error para
+        //Validar en tiempo real
+        [HttpGet]
+        public async Task<IActionResult> VerificarExisteTipoCuenta(string nombre)
+        {
+            //Asignaar el id del usuario temporalmente
+            var usuarioId = 1;
+
+            //Obtiene si existe o no (true o false)
+            var yaExisteTipoCuenta = await repositorioTiposCuentas.Existe(nombre, usuarioId);
+
+            //Si yaExisteTipoCuenta
+            if (yaExisteTipoCuenta)
+            {
+                //Va a retornar un objeto de tipo Json con el msj de erro
+                return Json($"El nombre {nombre} ya existe");
+            }
+
+            //Retorna un json
+            return Json(true);
         }
     }
 }
