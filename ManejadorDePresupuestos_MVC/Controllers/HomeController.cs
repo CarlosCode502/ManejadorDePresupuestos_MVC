@@ -23,6 +23,7 @@ namespace ManejadorDePresupuestos_MVC.Controllers
             return View();
         }
 
+        //V#117 Actualizando Tipos Cuentas (Agregando el action Error No encontrado controller)
         public IActionResult NoEncontrado()
         {
             return View();
