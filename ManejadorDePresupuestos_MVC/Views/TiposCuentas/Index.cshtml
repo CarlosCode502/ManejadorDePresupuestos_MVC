@@ -35,7 +35,8 @@
             <tr>
                 @* Celdas *@
                 <td>
-                    <a class="btn btn-primary">Editar</a>   
+                    @* //V#117 Actualizando Tipos Cuentas (Redirigiendo a la vista editar) *@
+                    <a class="btn btn-primary" asp-action="Editar" asp-route-id="@tipoCuenta.Id">Editar</a>
                     <a class="btn btn-danger">Eliminar</a>
                 </td>
                 <td>

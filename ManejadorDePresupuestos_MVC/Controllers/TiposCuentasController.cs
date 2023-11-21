@@ -184,6 +184,12 @@ namespace ManejadorDePresupuestos_MVC.Controllers
             return View(tipoCuentaId);
         }
 
+        //V#117 Actualizando Tipos Cuentas (Creando el action Editar POST)
+        /// <summary>
+        /// Action que recibe el modelo TipoCuentas y permite modificar el Nombre.
+        /// </summary>
+        /// <param name="tipoCuentaViewModel">Recibe el modelo TipoCuenta.</param>
+        /// <returns>Modifica el registro y retorna al index en caso de error a pag especifica.</returns>
         [HttpPost]
         public async Task<ActionResult> Editar(TipoCuentaViewModel tipoCuentaViewModel)
         {
