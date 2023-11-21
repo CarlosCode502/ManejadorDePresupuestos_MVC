@@ -157,6 +157,53 @@ namespace ManejadorDePresupuestos_MVC.Controllers
             return RedirectToAction("Index");   
         }
 
+
+        //V#117 Actualizando Tipos Cuentas (Creando el action Editar )
+        /// <summary>
+        /// Accion para editar TipoCuenta.
+        /// </summary>
+        /// <param name="id">Recibe el id del TipoCuenta</param>
+        /// <returns>El Id y usuarioId si TipoCuenta no es nulo.</returns>
+        [HttpGet]        
+        public async Task<ActionResult> Editar(int id)
+        {
+            //Obtiene el usuarioId a través del servicio
+            var usuarioId = servicioUsuarios.ObtenerUsuarioID();
+
+            //Obtiene el tipo cuenta solo si el usuario es el mismo que el del id
+            var tipoCuentaId = await repositorioTiposCuentas.ObtenerPorId(id, usuarioId);
+
+            //Si el tipoCuenta no es igual al id del usuario este es nulo
+            if(tipoCuentaId is null)
+            {
+                //SI es nulo retornar a una pag de error
+                return RedirectToAction("NoEncontrado", "Home");
+            }
+
+            //Si no Asigna el nuevo Nombre de TipoCuenta(Se actualiza)
+            return View(tipoCuentaId);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Editar(TipoCuentaViewModel tipoCuentaViewModel)
+        {
+            //Obtenemos el id del usuario por medio del servicio
+            var usuarioId = servicioUsuarios.ObtenerUsuarioID();
+
+            //Verificamos si el usuario existe
+            var tipoCuentaExiste = await repositorioTiposCuentas.ObtenerPorId(tipoCuentaViewModel.Id, usuarioId);
+
+            //Si el tipo cuenta no existe sera nulo
+            if (tipoCuentaExiste is null)
+            {
+                //Redirigimos al usuasrio a una pag de error
+                return RedirectToAction("NoEncontrado", "Home");
+            }
+
+            await repositorioTiposCuentas.Actualizar(tipoCuentaViewModel);
+            return RedirectToAction("Index");
+        }
+
         //V#114 Validaciones personalizadas con JavaScript utilizando Remote (CreandoAction)
         //Por medio de una accion httpget validamos si el usuario contiene un TipoCuenta ya registrado
         //Y genera un texto por medio de Json el cual recibira Remote de JS con el msj de error para

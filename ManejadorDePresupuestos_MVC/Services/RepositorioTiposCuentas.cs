@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using ManejadorDePresupuestos_MVC.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.SqlClient;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -62,6 +63,7 @@ namespace ManejadorDePresupuestos_MVC.Services
             //Consulta que obtiene el id(int) del registro
             //Dapper -> QuerySingle (Realiza un query que va a obtener un solo resultado). 
             var id = await connection.QuerySingleAsync<int>
+                //Insertar un tipo cuenta
                 (@"INSERT INTO Tbl_TiposCuentas_Sys (Nombre, UsuarioId, Orden)
                     Values (@Nombre, @UsuarioId, 0);
                     SELECT SCOPE_IDENTITY();", tipoCuentaViewModel); //SCOPE_IDENTITY() -> Trae el id del registro creado
@@ -89,7 +91,7 @@ namespace ManejadorDePresupuestos_MVC.Services
                 //Select 1 obtiene el primer registro de la tabla cuando nombre y usuarioId correspondan
                 (@"SELECT 1 
                 FROM Tbl_TiposCuentas_Sys
-                WHERE Nombre = @Nombre AND UsuarioId = @UsuarioId;", new {nombre, usuarioId});
+                WHERE Nombre = @Nombre AND UsuarioId = @UsuarioId;", new { nombre, usuarioId });
             //Funciona muy bien para ver la existencia de un registro sin traer el registro(para mostrarlo)
 
             //Como el método recibe un boleano se le envia si es (true -> 1 o false -> 0)
@@ -110,13 +112,51 @@ namespace ManejadorDePresupuestos_MVC.Services
             //Retorna una consulta de la tabla TiposCuentas
             return await connection.QueryAsync<TipoCuentaViewModel>
                 //Consulta donde pasamos como parametro el usuarioId
-                (@"SELECT iD, Nombre, UsuarioId, Orden
+                //Obtiene todos los registros de la tabla TiposCuentas cuando usuarioId sea determinado
+                (@"SELECT Id, Nombre, UsuarioId, Orden
                 FROM Tbl_TiposCuentas_Sys
                 WHERE UsuarioId = @UsuarioId", new { usuarioId });
         }
 
 
-        //V#117 Actualizando Tipos Cuentas 
+        //V#117 Actualizando Tipos Cuentas (Método simple para actualizar un registro TipoCuenta no retorna nada)
+        /// <summary>
+        /// Permite modificar / actualizar un registro TipoCuenta según el Id.
+        /// </summary>
+        /// <param name="tipoCuentaViewModel">El modelo de TipoCuenta.</param>
+        /// <returns>No retorna por eso el ExecuteAsync.</returns>
+        public async Task Actualizar(TipoCuentaViewModel tipoCuentaViewModel)
+        {
+            //Cadena de conexión
+            using var connection = new SqlConnection(connectionString);
+
+            //Permite modificar el TipoCuenta
+            await connection.ExecuteAsync //Permite ejecutar un query que no va a retornar nada
+                //Actualizar de la tabla TiposCuentas el campo Nombre Cuando el Id corresponda
+                (@"UPDATE Tbl_TiposCuentas_Sys
+                SET Nombre = @Nombre
+                WHERE Id = @Id", new { tipoCuentaViewModel });
+        }
+
+        //V#117 Actualizando Tipos Cuentas (Para que el usuario pueda consultar por id) (Este si retorna)
+        /// <summary>
+        /// Para evitar que el usuario pueda consultar otros cuentas que no le corresponde.
+        /// </summary>
+        /// <param name="id">Recibe el id.</param>
+        /// <param name="usuarioId">Recibe el usuarioId.</param>
+        /// <returns>El primer elemento o un valor por defecto.</returns>
+        public async Task<TipoCuentaViewModel> ObtenerPorId(int id, int usuarioId)
+        {
+            //Cadena de conexión
+            using var connection = new SqlConnection(connectionString);
+
+            //Obtiene el primer registro o un valor por defecto
+            return await connection.QueryFirstOrDefaultAsync<TipoCuentaViewModel>
+                //Obtiene algunos campos de la tabla TiposCuentas cuando el Id y UsuarioId correspondan
+                (@"SELECT Id, Nombre, Orden
+                FROM Tbl_TiposCuentas_Sys
+                WHERE Id = @Id AND UsuarioId = @UsuarioId", new {id, usuarioId});
+        }
 
     }
 }
