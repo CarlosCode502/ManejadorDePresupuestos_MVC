@@ -34,7 +34,7 @@ namespace ManejadorDePresupuestos_MVC.Controllers
         public async Task<IActionResult> Index() //Utilizamos un indice cuando deseamos mostrar un listado de elementos
         {
             //Asignamos el id del usuario al que vamos a consultar
-            var usuarioId = 1;
+            var usuarioId = 2;
 
             //Asigna el resultado del método Obtener a una variable para mandarlo a la vista
             var obtenerTiposCuentas = await repositorioTiposCuentas.Obtener(usuarioId);
@@ -141,7 +141,10 @@ namespace ManejadorDePresupuestos_MVC.Controllers
             //V#110 Insertando un Tipo de Cuenta en la Base de Datos (Inyectando el servicio repo)
             await repositorioTiposCuentas.Crear(tipoCuentaViewModel);//Accedemos al repositorio y metodo crear luego pasamos el modelo
 
-            return View();
+            //return View();
+
+            //V# 115 Listado Tipos Cuentas (Redirigiendo al usuario)
+            return RedirectToAction("Index");   
         }
 
         //V#114 Validaciones personalizadas con JavaScript utilizando Remote (CreandoAction)
@@ -171,3 +174,4 @@ namespace ManejadorDePresupuestos_MVC.Controllers
         }
     }
 }
+
