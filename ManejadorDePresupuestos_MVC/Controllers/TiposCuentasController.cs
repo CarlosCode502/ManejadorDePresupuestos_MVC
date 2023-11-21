@@ -13,16 +13,20 @@ namespace ManejadorDePresupuestos_MVC.Controllers
     {
 
         #region Campos creados luego de Inyección de dependencias
-        //V#110 Insertando un Tipo de Cuenta en la Base de Datos (Inyectando el servicio repo)
-        private readonly IRepositorioTiposCuentas repositorioTiposCuentas; 
+        //V#110 Insertando un Tipo de Cuenta en la Base de Datos
+        private readonly IRepositorioTiposCuentas repositorioTiposCuentas;
+        //V#116 Evitando repetir código.
+        private readonly IServicioUsuarios servicioUsuarios;
         #endregion
 
         //V#110 Insertando un Tipo de Cuenta en la Base de Datos (Inyectando el servicio repo)
-        public TiposCuentasController(IRepositorioTiposCuentas repositorioTiposCuentas) 
+        //V#116 Evitando repetir código (Inyectando/ utilizando el servicio usuarioId)
+        public TiposCuentasController(IRepositorioTiposCuentas repositorioTiposCuentas, IServicioUsuarios servicioUsuarios)
         {
-            #region Creado luego de Ctrl + . create and a field 
-            this.repositorioTiposCuentas = repositorioTiposCuentas; 
-            #endregion
+            //V#110 Insertando un Tipo de Cuenta en la Base de Datos.
+            this.repositorioTiposCuentas = repositorioTiposCuentas;
+            //V#116 Evitando repetir código.
+            this.servicioUsuarios = servicioUsuarios;
         }
 
 
@@ -34,7 +38,10 @@ namespace ManejadorDePresupuestos_MVC.Controllers
         public async Task<IActionResult> Index() //Utilizamos un indice cuando deseamos mostrar un listado de elementos
         {
             //Asignamos el id del usuario al que vamos a consultar
-            var usuarioId = 2;
+            //var usuarioId = 2;
+
+            //V#116 Evitando repetir código. (utilizando el servicio usuarioId)
+            var usuarioId = servicioUsuarios.ObtenerUsuarioID();
 
             //Asigna el resultado del método Obtener a una variable para mandarlo a la vista
             var obtenerTiposCuentas = await repositorioTiposCuentas.Obtener(usuarioId);
@@ -115,7 +122,10 @@ namespace ManejadorDePresupuestos_MVC.Controllers
 
             //V#110 Insertando un Tipo de Cuenta en la Base de Datos (Inyectando el servicio repo)
             //ANTES DE AGREGAR SE DEBIA CREAR UN USUARIO contra abcd
-            tipoCuentaViewModel.UsuarioId = 2;//Vamos a crear un usuario desde aquí
+            //tipoCuentaViewModel.UsuarioId = 2;//Vamos a crear un usuario desde aquí
+
+            //V#116 Evitando repetir código. (utilizando el servicio usuarioId)
+            tipoCuentaViewModel.UsuarioId = servicioUsuarios.ObtenerUsuarioID();
 
 
             #region //V# 113 Validaciones personalizadas a Nivel del Controlador 
@@ -155,7 +165,10 @@ namespace ManejadorDePresupuestos_MVC.Controllers
         public async Task<IActionResult> VerificarExisteTipoCuenta(string nombre)
         {
             //Asignaar el id del usuario temporalmente
-            var usuarioId = 2;
+            //var usuarioId = 2;
+
+            //V#116 Evitando repetir código. (utilizando el servicio usuarioId)
+            var usuarioId = servicioUsuarios.ObtenerUsuarioID();
 
             //Obtiene si existe o no (true o false)
             var yaExisteTipoCuenta = await repositorioTiposCuentas.Existe(nombre, usuarioId);
@@ -172,6 +185,9 @@ namespace ManejadorDePresupuestos_MVC.Controllers
             //Retorna un json
             return Json(true);
         }
+
+
+
     }
 }
 

@@ -114,5 +114,9 @@ namespace ManejadorDePresupuestos_MVC.Services
                 FROM Tbl_TiposCuentas_Sys
                 WHERE UsuarioId = @UsuarioId", new { usuarioId });
         }
+
+
+        //V#117 Actualizando Tipos Cuentas 
+
     }
 }
