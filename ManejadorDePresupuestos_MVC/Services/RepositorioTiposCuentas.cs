@@ -135,7 +135,7 @@ namespace ManejadorDePresupuestos_MVC.Services
                 //Actualizar de la tabla TiposCuentas el campo Nombre Cuando el Id corresponda
                 (@"UPDATE Tbl_TiposCuentas_Sys
                 SET Nombre = @Nombre
-                WHERE Id = @Id", new { tipoCuentaViewModel });
+                WHERE Id = @Id", tipoCuentaViewModel); //Error aquí
         }
 
         //V#117 Actualizando Tipos Cuentas (Para que el usuario pueda consultar por id) (Este si retorna)
