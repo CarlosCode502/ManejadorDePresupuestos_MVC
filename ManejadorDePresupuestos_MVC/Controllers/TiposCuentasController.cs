@@ -26,6 +26,25 @@ namespace ManejadorDePresupuestos_MVC.Controllers
         }
 
 
+        #region //V# 115 Listado Tipos Cuentas (Creando la action mostrar/obtener)
+        /// <summary>
+        /// Obtiene un listado de elementos y los manda a la vista.
+        /// </summary>
+        /// <returns>Un listado.</returns>
+        public async Task<IActionResult> Index() //Utilizamos un indice cuando deseamos mostrar un listado de elementos
+        {
+            //Asignamos el id del usuario al que vamos a consultar
+            var usuarioId = 1;
+
+            //Asigna el resultado del método Obtener a una variable para mandarlo a la vista
+            var obtenerTiposCuentas = await repositorioTiposCuentas.Obtener(usuarioId);
+
+            //Se manda a la vista
+            return View(obtenerTiposCuentas);
+        }
+        #endregion
+
+
         #region //V#109 Comunicandonos con la Base de datos - Connection Strings (Realizando un prueba de conexion)
         ///// <summary>
         ///// Campo para asignar la cadena de conexion
@@ -96,7 +115,7 @@ namespace ManejadorDePresupuestos_MVC.Controllers
 
             //V#110 Insertando un Tipo de Cuenta en la Base de Datos (Inyectando el servicio repo)
             //ANTES DE AGREGAR SE DEBIA CREAR UN USUARIO contra abcd
-            tipoCuentaViewModel.UsuarioId = 1;//Vamos a crear un usuario desde aquí
+            tipoCuentaViewModel.UsuarioId = 2;//Vamos a crear un usuario desde aquí
 
 
             #region //V# 113 Validaciones personalizadas a Nivel del Controlador 
@@ -125,7 +144,7 @@ namespace ManejadorDePresupuestos_MVC.Controllers
             return View();
         }
 
-        //V#114 Validaciones personalizadas con JavaScript utilizando Remote
+        //V#114 Validaciones personalizadas con JavaScript utilizando Remote (CreandoAction)
         //Por medio de una accion httpget validamos si el usuario contiene un TipoCuenta ya registrado
         //Y genera un texto por medio de Json el cual recibira Remote de JS con el msj de error para
         //Validar en tiempo real
@@ -133,7 +152,7 @@ namespace ManejadorDePresupuestos_MVC.Controllers
         public async Task<IActionResult> VerificarExisteTipoCuenta(string nombre)
         {
             //Asignaar el id del usuario temporalmente
-            var usuarioId = 1;
+            var usuarioId = 2;
 
             //Obtiene si existe o no (true o false)
             var yaExisteTipoCuenta = await repositorioTiposCuentas.Existe(nombre, usuarioId);
@@ -142,6 +161,8 @@ namespace ManejadorDePresupuestos_MVC.Controllers
             if (yaExisteTipoCuenta)
             {
                 //Va a retornar un objeto de tipo Json con el msj de erro
+                //JSon permite establecer comunicación con c# (Serializarlo y transmititrlo)
+                //Es un formato para representar una cadena de texto
                 return Json($"El nombre {nombre} ya existe");
             }
 

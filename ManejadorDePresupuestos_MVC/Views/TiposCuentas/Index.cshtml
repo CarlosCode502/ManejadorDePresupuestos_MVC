@@ -1,0 +1,49 @@
+﻿@*
+    //V# 115 Listado Tipos Cuentas (Creando la vista Index)
+*@
+
+@model IEnumerable<TipoCuentaViewModel>
+
+@{
+    ViewData["Title"] = "Listado Tipos de Cuentas";
+}
+
+@* Textos de encabezado *@
+<h1 class="text-uppercase">Tipos de cuentas</h1>
+<h5>El tipo de cuenta se refiere a como podemos agrupar cuentas.</h5>
+<h6><strong>Ejemplo: </strong>Préstamos, tarjetas de crédito, etc.</h6>
+
+@* Enlace o link para ir a la vista Crear *@
+<a asp-action="Crear" class="btn btn-primary mb-3">Crear nuevo</a>
+
+@* Tabla para mostrar los datos  *@
+<table class="table">
+    @* Encabezado de la tabla *@
+    <thead>
+        @* Fila *@
+        <tr>
+            @* Columnas *@
+            <th>Acciones</th>
+            <th>Nombre</th>
+        </tr>
+    </thead>
+    @* Cuerpo *@
+    <tbody>
+        @foreach (var tipoCuenta in Model)
+        {
+            @* Filas *@
+            <tr>
+                @* Celdas *@
+                <td>
+                    <a class="btn btn-primary">Editar</a>   
+                </td>
+                <td>
+                    <a class="btn btn-danger">Eliminar</a>
+                </td>
+                <td>
+                    @tipoCuenta.Nombre
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

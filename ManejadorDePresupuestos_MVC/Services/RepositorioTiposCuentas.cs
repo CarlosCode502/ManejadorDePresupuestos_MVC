@@ -95,5 +95,24 @@ namespace ManejadorDePresupuestos_MVC.Services
             //Como el método recibe un boleano se le envia si es (true -> 1 o false -> 0)
             return existe == 1;
         }
+
+        //V# 115 Listado Tipos Cuentas (Creando el método para mostrar)
+        /// <summary>
+        /// Recibe un IEnumerable con el Modelo TipoCuenta (Un listado de elementos)
+        /// </summary>
+        /// <param name="usuarioId">Recibe el usuarioId.</param>
+        /// <returns>Una consulta con el usuarioId como parámetro.</returns>
+        public async Task<IEnumerable<TipoCuentaViewModel>> Obtener(int usuarioId)//Ctrl+. para enviar al IRepositorio
+        {
+            //Abrimos la conexión
+            using var connection = new SqlConnection(connectionString);
+
+            //Retorna una consulta de la tabla TiposCuentas
+            return await connection.QueryAsync<TipoCuentaViewModel>
+                //Consulta donde pasamos como parametro el usuarioId
+                (@"SELECT iD, Nombre, UsuarioId, Orden
+                FROM Tbl_TiposCuentas_Sys
+                WHERE UsuarioId = @UsuarioId", new { usuarioId });
+        }
     }
 }

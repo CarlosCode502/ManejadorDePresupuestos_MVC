@@ -12,5 +12,7 @@ namespace ManejadorDePresupuestos_MVC.Services
         Task Crear(TipoCuentaViewModel tipoCuentaViewModel);
         //V#113 Validaciones personalizadas a Nivel del Controlador
         Task<bool> Existe(string nombre, int usuarioId);
+        //V# 115 Listado Tipos Cuentas (Pasando a la interfaz)
+        Task<IEnumerable<TipoCuentaViewModel>> Obtener(int usuarioId);
     }
 }

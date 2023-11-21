@@ -26,7 +26,7 @@ namespace ManejadorDePresupuestos_MVC.Models
         //[PrimerLetraMayuscula]    //V#107 Validaciones personalizadas por atributos (no es necesario poner el Attribute)
 
         //Remote se comunica desde el nav hasta el servidor (Action Httpget, Controller)
-        [Remote(action: "VerificarExisteTipoCuenta", controller: "TiposCuentas")] //V#114 Validaciones personalizadas con JavaScript utilizando Remote
+        [Remote(action: "VerificarExisteTipoCuenta", controller: "TiposCuentas")] //V#114 Validaciones personalizadas con JavaScript utilizando Remote (Aplicando el DA)
         public string Nombre { get; set; }
 
         [Required(ErrorMessage = "* El campo {0} es requerido.")]
