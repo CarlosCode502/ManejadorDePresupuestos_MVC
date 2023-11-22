@@ -7,6 +7,8 @@ namespace ManejadorDePresupuestos_MVC.Services
     {
         //V#117 Actualizando Tipos Cuentas (Método simple para actualizar un registro TipoCuenta no retorna nada)
         Task Actualizar(TipoCuentaViewModel tipoCuentaViewModel);
+        //V#118 Borrando tipos de cuentas (Registrando en la interfaz)
+        Task Borrar(int id);
         //V#110
         //void Crear(TipoCuentaViewModel tipoCuentaViewModel);
         //V#112 Aplicando la programación Asíncrona(Es útil cuando existe una comunicación con externos)

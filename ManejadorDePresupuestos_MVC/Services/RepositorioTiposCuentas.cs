@@ -135,7 +135,7 @@ namespace ManejadorDePresupuestos_MVC.Services
                 //Actualizar de la tabla TiposCuentas el campo Nombre Cuando el Id corresponda
                 (@"UPDATE Tbl_TiposCuentas_Sys
                 SET Nombre = @Nombre
-                WHERE Id = @Id", tipoCuentaViewModel); //Error aquí
+                WHERE Id = @Id", tipoCuentaViewModel); //Tenía Error aquí (pasaba id y usuarioId en vez del modelo)
         }
 
         //V#117 Actualizando Tipos Cuentas (Para que el usuario pueda consultar por id) (Este si retorna)
@@ -157,6 +157,24 @@ namespace ManejadorDePresupuestos_MVC.Services
                 FROM Tbl_TiposCuentas_Sys
                 WHERE Id = @Id AND UsuarioId = @UsuarioId", new {id, usuarioId});
         }
+
+        //V#118 Borrando tipos de cuentas (Método que permitira borrar un registro TipoCuenta)
+        /// <summary>
+        /// Permite borrar/eliminar un registro TipoCuenta según Id.
+        /// </summary>
+        /// <param name="id">Recibe el id.</param>
+        /// <returns>Nada</returns>
+        public async Task Borrar(int id)
+        {
+            //Obtenenmos la conexión
+            using var connection = new SqlConnection (connectionString);
+
+            //Como es un método void (por eso Task Borrar) no retornara nada            
+            await connection.ExecuteAsync
+                //Consulta que permitira eliminar el registro TipoCuenta según el id(por eso lo recibe)
+                (@"DELETE Tbl_TiposCuentas_Sys WHERE Id = @Id", new { id }); //necesita el new ya que es un parametro espec
+        }
+
 
     }
 }

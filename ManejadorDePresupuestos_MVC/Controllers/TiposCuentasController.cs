@@ -210,6 +210,62 @@ namespace ManejadorDePresupuestos_MVC.Controllers
             return RedirectToAction("Index");
         }
 
+        //V#118 Borrando tipos cuentas
+        /// <summary>
+        /// Action que obtiene y valida si el usuario tiene permisos o existe ese id
+        /// </summary>
+        /// <param name="id">Id del registro</param>
+        /// <returns>El modelo hacia la vista</returns>
+        [HttpGet]
+        public async Task<IActionResult> Borrar(int id)
+        {
+            //Obtenenmos el usuario Id
+            var usuarioId = servicioUsuarios.ObtenerUsuarioID();
+
+            //Obtenemos el repoTipoCuenta para ver si existe o no tiene permisos
+            var tipoCuenta = await repositorioTiposCuentas.ObtenerPorId(id, usuarioId);
+
+            //Verifica si existe el tipoCuenta 
+            if(tipoCuenta is null)
+            {
+                //Si no existe o no tiene permiso lo redirige a pag de error
+                return RedirectToAction("NoEncontrado", "Home");
+            }
+
+            //Envia el modelo a la vista
+            return View(tipoCuenta);
+        }
+
+        //V#118 Borrando tiposCuentas
+        /// <summary>
+        /// Elimina el registro TipoCuenta segun id
+        /// </summary>
+        /// <param name="id">Recibe el id del registro</param>
+        /// <returns>Una vista</returns>
+        [HttpPost]
+        public async Task<IActionResult> BorrarTipoCuenta(int id)
+        {
+            //Obtenemos el id del usuario
+            var usuarioId = servicioUsuarios.ObtenerUsuarioID();
+
+            //Obtiene el tipoCuenta según id y usuario id
+            var tipoCuenta = await repositorioTiposCuentas.ObtenerPorId(id, usuarioId);
+
+            //Valida si existe el tipoCuenta o tiene permisos el user
+            if(tipoCuenta is null)
+            {
+                //Si es nulo lo redirige a la pag de error
+                return RedirectToAction("NoEncontrado", "Home");
+            }
+
+            //obtiene el método borrar y le manda el id
+            await repositorioTiposCuentas.Borrar(id);
+
+            //Luego de borrar lo redirige a la vista
+            return RedirectToAction("Index");
+        }
+
+
         //V#114 Validaciones personalizadas con JavaScript utilizando Remote (CreandoAction)
         //Por medio de una accion httpget validamos si el usuario contiene un TipoCuenta ya registrado
         //Y genera un texto por medio de Json el cual recibira Remote de JS con el msj de error para
@@ -238,9 +294,6 @@ namespace ManejadorDePresupuestos_MVC.Controllers
             //Retorna un json
             return Json(true);
         }
-
-
-
     }
 }
 
