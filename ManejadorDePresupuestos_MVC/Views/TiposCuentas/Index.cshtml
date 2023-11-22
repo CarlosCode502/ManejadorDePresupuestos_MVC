@@ -28,7 +28,9 @@
         </tr>
     </thead>
     @* Cuerpo *@
-    <tbody>
+    @* //V#119 Arrastrando filas de una tabla (creando un id para el cuerpo de la tabla) 
+        Solo aquí podra arrastrar o ordenar los registros el usuario*@    
+    <tbody id="reordenable">
         @foreach (var tipoCuenta in Model)
         {
             @* Filas *@
@@ -47,3 +49,15 @@
         }
     </tbody>
 </table>
+
+@* //V#119 Arrastrando filas de una tabla (Creando la sección scripts) 
+Usando Jquery para la función de ordenamiento con Jquery UI *@
+@section Scripts{
+    <script>
+        //Espera a que se carge todo el doc para finalmente ejecutar el script JS
+        //Esto es JQuery
+        $(function(){
+            $("#reordenable").sortable();
+        })
+    </script>
+}

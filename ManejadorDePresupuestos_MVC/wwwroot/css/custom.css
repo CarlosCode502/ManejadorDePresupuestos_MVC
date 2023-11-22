@@ -1,0 +1,4 @@
+﻿/*//V#119 Arrastrando filas de una tabla (Aplicando un estilo css)*/
+#reordenable {
+    cursor: move;
+}
