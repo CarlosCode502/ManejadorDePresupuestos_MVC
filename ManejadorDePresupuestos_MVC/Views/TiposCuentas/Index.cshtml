@@ -37,6 +37,9 @@
             <tr>
                 @* Celdas *@
                 <td>
+                    @* //V#120 Haciendo un post con el FETCH API (Creando un input hidden con el id)
+                    Crear un input que va a contener el id de un tipoCuenta este va a ser hiden *@
+                    <input type="hidden" value="@tipoCuenta.Id" class="ids" />
                     @* //V#117 Actualizando Tipos Cuentas (Redirigiendo a la vista editar) *@
                     <a class="btn btn-primary" asp-action="Editar" asp-route-id="@tipoCuenta.Id">Editar</a>
                     @* //V#118 Borrando tipos de cuentas (Redirigiendo a la vista borrar)*@
@@ -54,10 +57,58 @@
 Usando Jquery para la función de ordenamiento con Jquery UI *@
 @section Scripts{
     <script>
+
+        //V#120 Haciendo un post con el FETCH API (Creando una constante tipo URL)
+        //Var constante y  a través de razor obtenemos una url con la action Ordenar HttpPost (del controller)
+        const urlOrdenar = '@Url.Action("Ordenar")';
+
         //Espera a que se carge todo el doc para finalmente ejecutar el script JS
         //Esto es JQuery
         $(function(){
-            $("#reordenable").sortable();
+            $("#reordenable").sortable({
+                //V#120 Haciendo un post con el FETCH API (Creando una funcion luego de detener se actualice el orden de tabla TC)
+                //Al detenerse la función actualizar el orden de los registros de la tabla tiposCuenta
+                stop: async function (e, ui) {
+                    await actualizarOrdenes(); //Llamamos la función creada abajo luego
+                }
+            });
+
+            //V#120 Haciendo un post con el FETCH API (Funcion que actualizará en base a los ids)
+            async function actualizarOrdenes(){
+                const ids = obtenerIdsDeElementos(); //Otra función creada luego que obtendra los ids (listado de ids)
+
+                //V#120 Haciendo un post con el FETCH API (Luego de retornar los ids)
+                await enviarIdsAlBackend(ids);
+            }
+
+            //V#120 Haciendo un post con el FETCH API (Función que obtiene los ids según se vayan mostrando en el foreach del Index)
+            function obtenerIdsDeElementos(){
+                //Almacena todos los id con la clase .ids por eso apunta(seleciona id hidden) a esta
+                const ids = $(".ids").map(function () {
+                    //Obtiene cada uno y su valor para poder iterarlo
+                    return $(this).val()
+                }).get(); //Convierte los ids obtenidos en un arreglo
+
+                //Retorna el listado de arreglos
+                return ids;
+            }
+
+            //V#120 Haciendo un post con el FETCH API (Enviar ids obtenidos a través del FETCH API (especificamos parametros))
+            //EN ESTE PUNTO VOLVIMOS ASYNC Y AWAIT ALGUNAS FUNCIONES
+            async function enviarIdsAlBackend(ids) {
+                //Obtiene los id a formato Json para poder enviarlos
+                var data = JSON.stringify(ids);
+
+                //Utilizamos el fetch api y llenamos parametros
+                //Recibe como param la url del action del controller "Ordenar"
+                await fetch(urlOrdenar, {
+                    method: 'POST', //Tipo de envio
+                    body: data, //En el cuerpo va a ir los id
+                    headers: {
+                        'Content-Type': 'application/json' //Tipo de contenido
+                    }
+                });
+            }
         })
     </script>
 }

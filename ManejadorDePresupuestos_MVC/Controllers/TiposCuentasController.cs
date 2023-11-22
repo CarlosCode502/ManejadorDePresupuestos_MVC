@@ -294,6 +294,18 @@ namespace ManejadorDePresupuestos_MVC.Controllers
             //Retorna un json
             return Json(true);
         }
+
+        //V#120 Haciendo un post con el FETCH API (Creando el action Ordenar)
+        /// <summary>
+        /// Se ejecuta al momento en que el usuario cambia el orden de las filas de TipoCuenta
+        /// </summary>
+        /// <param name="ids">Recibe un arreglo de ids</param>
+        /// <returns>Un msj </returns>
+        [HttpPost]
+        public async Task<IActionResult> Ordenar([FromBody] int[] ids) //Del cuerpo[FromBody] recibimos un arreglo de ids
+        {
+            return Ok();
+        }
     }
 }
 
