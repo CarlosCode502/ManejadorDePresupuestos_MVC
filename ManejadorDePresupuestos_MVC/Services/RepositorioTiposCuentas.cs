@@ -115,7 +115,9 @@ namespace ManejadorDePresupuestos_MVC.Services
                 //Obtiene todos los registros de la tabla TiposCuentas cuando usuarioId sea determinado
                 (@"SELECT Id, Nombre, UsuarioId, Orden
                 FROM Tbl_TiposCuentas_Sys
-                WHERE UsuarioId = @UsuarioId", new { usuarioId });
+                WHERE UsuarioId = @UsuarioId
+                ORDER BY Orden ", //V#121 Aplicando Mutliples Queries a la Base de Datos (Modificando el OrderBy)
+                new { usuarioId });
         }
 
 
@@ -175,6 +177,24 @@ namespace ManejadorDePresupuestos_MVC.Services
                 (@"DELETE Tbl_TiposCuentas_Sys WHERE Id = @Id", new { id }); //necesita el new ya que es un parametro espec
         }
 
+        //V#121 Aplicando Mutliples Queries a la Base de Datos (Creando el método para ordenar)
+        /// <summary>
+        /// Método que recibe el modelo y reordena los registros de la tipoCuenta segun el nuevo orden.
+        /// </summary>
+        /// <param name="tipoCuentaViewModels">El modelo tipoCuenta</param>
+        /// <returns>EL modelo con el nuevo orden.</returns>
+        public async Task Ordenar(IEnumerable<TipoCuentaViewModel> tipoCuentaViewModels)
+        {
+            //Almacena la consulta de actualizar el orden según el id del registro
+            var query = "UPDATE Tbl_TiposCuentas_Sys SET Orden = @Orden WHERE Id = @Id";
+
+            //Obtenemos la conexión
+            using var connection = new SqlConnection(connectionString);
+
+            //Dapper nos ayuda en estos casos 
+            //Ya que entiende que para cada registro de la tabla se ejecutará una nueva consulta con estos parametros
+            await connection.ExecuteAsync(query, tipoCuentaViewModels);
+        }
 
     }
 }

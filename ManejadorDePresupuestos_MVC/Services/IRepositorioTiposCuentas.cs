@@ -20,5 +20,7 @@ namespace ManejadorDePresupuestos_MVC.Services
         Task<IEnumerable<TipoCuentaViewModel>> Obtener(int usuarioId);
         //V#117 Actualizando Tipos Cuentas (Para que el usuario pueda consultar por id solo su id) (Este si retorna)
         Task<TipoCuentaViewModel> ObtenerPorId(int id, int usuarioId);
+        //V#121 Aplicando Mutliples Queries a la Base de Datos (Implementando el Ordenamiento en la interfaz)
+        Task Ordenar(IEnumerable<TipoCuentaViewModel> tipoCuentaViewModels);
     }
 }

@@ -304,6 +304,38 @@ namespace ManejadorDePresupuestos_MVC.Controllers
         [HttpPost]
         public async Task<IActionResult> Ordenar([FromBody] int[] ids) //Del cuerpo[FromBody] recibimos un arreglo de ids
         {
+            //V#121 Aplicando Mutliples Queries a la Base de Datos (Completando el action Ordenar)
+            #region //V#121 Aplicando Mutliples Queries a la Base de Datos (Completando el action Ordenar)
+            //Obtenemos el id del usuario
+            var usuarioId = servicioUsuarios.ObtenerUsuarioID();
+
+            //Obtener los tipos de cuentas segun el usuarioId
+            var tiposCuentas = await repositorioTiposCuentas.Obtener(usuarioId);
+
+            //Obtenemos los idsDesde el frontend (Que enviamos con el FETCH API)
+            //Para esto utilizaremos un poco de LINQ (Language Integrated Query)
+            var idsTiposCuentas = tiposCuentas.Select(x => x.Id);
+
+            //Obtiene el listado de ids y excluye el de otros usuarios
+            var idsTiposCuentasNoPerteneceAlUsuario = ids.Except(idsTiposCuentas).ToList();
+
+            //Valida que no exista el id de tipoCuenta de otro usuario
+            //Si esta en 0 no existen si es mayor a 0 existen
+            if (idsTiposCuentasNoPerteneceAlUsuario.Count > 0)
+            {
+                //Si es mayor a 0 retorna un error 
+                return Forbid(); //Significa proivido
+            }
+
+            //Obtiene los ids oredenados (Con select se hace el mapeo (valor de id) y (indice = orden))
+            var tiposCuentasOrdenados = ids.Select((valor, indice) =>
+            //Volvemos a modificar/sobrescribir/actualizar el orden de los registros en la bd (como numerable)
+            new TipoCuentaViewModel() { Id = valor, Orden = indice + 1 }).AsEnumerable();
+
+            //Enviamos el nuevo orden del modelo
+            await repositorioTiposCuentas.Ordenar(tiposCuentasOrdenados); 
+            #endregion
+
             return Ok();
         }
     }
