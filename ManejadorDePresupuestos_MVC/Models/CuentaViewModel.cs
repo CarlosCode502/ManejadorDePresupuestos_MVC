@@ -26,5 +26,8 @@ namespace ManejadorDePresupuestos_MVC.Models
         [StringLength(maximumLength: 1000)]
         [Display(Name = "Descripción")]
         public string Descripcion { get; set; }
+
+        //V#127 Indice de Cuentas - Query (Agregando la nueva propiedad del modelo luego de crear el INNER JOIN)
+        public string TipoCuenta { get; set; }
     }
 }

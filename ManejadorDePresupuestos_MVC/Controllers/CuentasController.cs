@@ -34,6 +34,32 @@ namespace ManejadorDePresupuestos_MVC.Controllers
             this.repositorioCuentas = repositorioCuentas;
         }
 
+
+        //V#127 Indice de Cuentas - Query (Creando action de Index)
+        [HttpGet]
+        public async Task<IActionResult> Index()
+        {
+            //Obtenemos el usuarioid
+            var usuarioId = servicioUsuarios.ObtenerUsuarioID();
+
+            //Contiene un INNER JOIN Entre la tabla tiposCuentas y Cuentas (las obtiene por el id) 
+            var cuentasConTipoCuenta = await repositorioCuentas.Buscar(usuarioId);
+
+            //Construir el modelo
+            var modelo = cuentasConTipoCuenta
+                .GroupBy(x => x.TipoCuenta) //Agrupa por el mismo tipoCuenta
+                .Select(grupo => new IndiceCuentasViewModel
+                {
+                    TipoCuenta = grupo.Key, //Es igual al valor de tipoCuenta
+                    CuentasIndice = grupo.AsEnumerable() //Obteniendo el IEnumerable del tipo cuentas
+                    //Balance ya no se coloca ya que este se suma en el modeloIndiceCuentas 
+                }).ToList();
+
+            //Mandamos el modelo a la vista de tipo (IndiceCuentasViewModel)
+            return View(modelo);
+        }
+
+
         //V#125 Formulario de Cuentas (Creando el Controlador y Action Cuentas)
         [HttpGet]
         public async Task<IActionResult> Crear() 
@@ -91,7 +117,7 @@ namespace ManejadorDePresupuestos_MVC.Controllers
 
             //Si el usuario es valido se crea la cuenta donde recibe el dropdown
             await repositorioCuentas.Crear(dropDownCuentaViewModel);
-            return RedirectToAction("Index", "TiposCuentas");
+            return RedirectToAction("Index");
         }
 
 
@@ -110,7 +136,6 @@ namespace ManejadorDePresupuestos_MVC.Controllers
             //Mapea los tiposCuentas para el UsuarioId y los carga en el SelectListItem (Texto = Nombre y valor = Id)
             return tiposCuentas.Select(x => new SelectListItem(x.Nombre, x.Id.ToString()));
         }
-
     }
 }
 
