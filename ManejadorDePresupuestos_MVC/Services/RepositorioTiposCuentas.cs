@@ -63,10 +63,21 @@ namespace ManejadorDePresupuestos_MVC.Services
             //Consulta que obtiene el id(int) del registro
             //Dapper -> QuerySingle (Realiza un query que va a obtener un solo resultado). 
             var id = await connection.QuerySingleAsync<int>
-                //Insertar un tipo cuenta
-                (@"INSERT INTO Tbl_TiposCuentas_Sys (Nombre, UsuarioId, Orden)
-                    Values (@Nombre, @UsuarioId, 0);
-                    SELECT SCOPE_IDENTITY();", tipoCuentaViewModel); //SCOPE_IDENTITY() -> Trae el id del registro creado
+
+            ////Insertar un tipo cuenta
+            //(@"INSERT INTO Tbl_TiposCuentas_Sys (Nombre, UsuarioId, Orden)
+            //    Values (@Nombre, @UsuarioId, 0);
+            //    SELECT SCOPE_IDENTITY();", tipoCuentaViewModel); //SCOPE_IDENTITY() -> Trae el id del registro creado
+
+
+            //V#122 Generando el Orden Correcto al insertar (modificando el método crear)
+            //Insertar Tipo Cuenta (Ahora sera el StoreProcedure llamar con nombre)
+            //En este caso ya no se mandara el modelo ya que solo recibira 2 parametros y el Orden se obtiene desde la BD
+            //Por lo que dara error (LO CORRECTO SERIA ESPECIFICAR ) usando objetos anonymos
+            (@"New_Reg_TipoCuenta_SP", //Mismo nombre que el sp
+            new {UsuarioId = tipoCuentaViewModel.UsuarioId, Nombre = tipoCuentaViewModel.Nombre}, //Obj anonimos pasamos 2 prm
+            commandType: System.Data.CommandType.StoredProcedure); //Especificamos que es de tipo SP
+
 
             //Asigna el id obtenido al campo id del modelo tipo cuenta 
             tipoCuentaViewModel.Id = id;
