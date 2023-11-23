@@ -11,6 +11,9 @@ builder.Services.AddTransient<IRepositorioTiposCuentas, RepositorioTiposCuentas>
 //V#116 Evitando repetir código (Creando el servicio)
 builder.Services.AddTransient<IServicioUsuarios, ServicioUsuarios>(); //No comparte instancias entre el mismo servicio
 
+//V#126 Insertar Cuenta (Agregando el servicio RepositorioCuentas)
+builder.Services.AddTransient<IRepositorioCuentas, RepositorioCuentas>(); //No comparte instancias a otras clases  
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
