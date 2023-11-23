@@ -206,6 +206,5 @@ namespace ManejadorDePresupuestos_MVC.Services
             //Ya que entiende que para cada registro de la tabla se ejecutará una nueva consulta con estos parametros
             await connection.ExecuteAsync(query, tipoCuentaViewModels);
         }
-
     }
 }
