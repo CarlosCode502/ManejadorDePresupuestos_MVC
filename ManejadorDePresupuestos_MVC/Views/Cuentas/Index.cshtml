@@ -13,6 +13,12 @@
         // return Math.Abs(balance).ToString("N");
         return Math.Abs(balance).ToString("Q 00,00.00");
     }
+
+    //Funcion que obtiene el balance si es mayor a 0 retorna "activo" si es menor a 0 retorna "pasivo"
+    string ObtenerClaseBalance(decimal balance)
+    {
+        return balance >= 0 ? "activos" : "pasivos";
+    }
 }
 
 <h1>Cuentas</h1> 
@@ -21,7 +27,7 @@
 <a asp-action="Crear" class="btn btn-primary mb-3">Crear nueva</a>
 
 @* //V#128 Indice de Cuentas - Query (Completando la vista Index) *@
-<div class="contenedor-totales mb-3">
+<div class="contenedor-totales mb-5">
     <div>
         <div>
             <strong>Activos</strong>
@@ -49,4 +55,53 @@
             @formatearBalance(Model.Sum(x => x.Balance))
         </div>
     </div>
+</div>
+
+@* Utilizamos un acordeon de Boostrap (El acordeon permite mostrar elementos en pestañas que se pueden mostrar/ocultar)*@
+<div class="accordion acordeon-cuentas">
+    @* Recorre el modelo y con tipoCuenta es posible acceder a cada propiedad *@
+    @foreach (var tipoCuenta in Model)
+    {
+        <div class="accordion-item"> 
+            <h2 class="accordion-header" id="cabeceraUno">
+                @{
+                    //Por si el tipoCuenta tiene espacios los elimina
+                    var id = tipoCuenta.TipoCuenta.Replace(" ", "");
+                    //Generar un id dinamico (Son necesarios para mostrar/ocultar los acordeones)
+                    var dataBSTarget = "#" + id;
+                    //Si el balance es positivo obtener la clase "positivos" y si es negativo obtener la clase "negativos"
+                    var claseTipoCuenta = ObtenerClaseBalance(tipoCuenta.Balance);
+                }
+
+                @* Btn del acordeon en donde le pasamos el id del elemento en "data-bs-target" *@
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="@dataBSTarget">
+                <span class="me-3">
+                    @* Obtiene el tipo cuenta y lo muestra en un texto fuerte *@
+                    <span><strong>@tipoCuenta.TipoCuenta</strong></span>
+                    @* Obtiene el indicador de la clase si es positivo o negativo y le aplica el formato de moneda al balance *@
+                    <span class="@claseTipoCuenta">@formatearBalance(tipoCuenta.Balance)</span>
+                </span>
+                </button>
+            </h2>
+            
+            @* El cuerpo el id sera el obtenido arriba *@
+            <div id="@id" class="accordion-collapse collapse show">
+                <div>
+                    @* Agregamos un "unorderList" para agrupar las cuentas individuales *@
+                    <ul class="list-group">
+                        @foreach (var cuenta in tipoCuenta.CuentasIndice)
+                        {
+                            //Obtener en color dependiendo del balance
+                            var claseCuenta = ObtenerClaseBalance(cuenta.Balance);
+                            //El listado
+                            <li class="list-group-item">
+                                <span><strong>@cuenta.Nombre</strong></span>
+                                <span class="@claseCuenta">@formatearBalance(cuenta.Balance)</span>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    }
 </div>
