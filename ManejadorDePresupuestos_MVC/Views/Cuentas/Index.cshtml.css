@@ -1,0 +1,28 @@
+﻿/* V#129 Aislamiento de CSS */
+/*Se utiliza para aplicar algunos estilos que no desamos aplicar a otros archivos,
+    Así como tambien para no tener demasiado código en nuestro archivo css.
+*/
+
+.acordeon-cuentas button {
+    /*Color del texto TipoCuenta*/
+    color: black !important;
+    /*Tamaños de texto*/
+    font-size: 0.65em;
+}
+
+    .acordeon-cuentas button > span {
+        display: flex;
+        justify-content: space-between;
+        width: 100%
+    }
+
+.acordeon-cuentas ul li {
+    display: flex;
+    justify-content: space-between;
+    /*font-size: 0.95em;*/
+    font-weight: lighter;
+}
+
+.acordeon-cuentas .acordeon-collapse {
+    font-size: 0.8em;
+}
