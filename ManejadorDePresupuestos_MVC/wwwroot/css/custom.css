@@ -1,4 +1,29 @@
 ﻿/*//V#119 Arrastrando filas de una tabla (Aplicando un estilo css)*/
+/*Cambiar el diseño de cursor al estar sobre la tabla TiposCuentas*/
 #reordenable {
     cursor: move;
+}
+
+/*//V#128 Indice de Cuentas - Query (Completando la vista Index)*/
+/*Diseño de los balances espaciado y diseño*/
+.contenedor-totales{
+    display: flex;
+    justify-content: space-around;
+    font-size: 1.5em; /*26px*/
+    text-align: center;
+}
+
+.activos{
+    color: blue;
+    font-weight:900;
+}
+
+.pasivos {
+    color: red;
+    font-weight: 900;
+}
+
+.totales {
+    color: green;
+    font-weight: 900;
 }
