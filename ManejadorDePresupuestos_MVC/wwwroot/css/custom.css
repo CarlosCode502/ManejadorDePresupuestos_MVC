@@ -41,11 +41,13 @@
     width: 100%
 }
 
-.acordeon-cuentas ul li{
+.acordeon-cuentas ul li {
     display: flex;
     justify-content: space-between;
+    /*font-size: 0.95em;*/
+    font-weight: lighter;
 }
 
 .acordeon-cuentas .acordeon-collapse{
-    font-size: 0.9em;
+    font-size: 0.8em;
 }

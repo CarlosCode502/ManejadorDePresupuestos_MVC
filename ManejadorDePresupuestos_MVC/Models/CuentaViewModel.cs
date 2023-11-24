@@ -15,16 +15,17 @@ namespace ManejadorDePresupuestos_MVC.Models
 
         [Required(ErrorMessage = "El campo {0} es requerido.")]
         [StringLength(maximumLength: 50)]
-        [PrimerLetraMayuscula]        
+        [PrimerLetraMayuscula]
+        [Display(Name = "Nombre / Concepto:")]
         public string Nombre { get; set; }
 
-        [Display(Name = "Tipo Cuenta")] //Este texto va a mostrar el DropDownList
+        [Display(Name = "Cargo a cuenta de:")] //Este texto va a mostrar el DropDownList
         public int TipoCuentaId { get;  set; } 
 
         public decimal Balance { get; set; }
 
         [StringLength(maximumLength: 1000)]
-        [Display(Name = "Descripción")]
+        [Display(Name = "Descripción:")]
         public string Descripcion { get; set; }
 
         //V#127 Indice de Cuentas - Query (Agregando la nueva propiedad del modelo luego de crear el INNER JOIN)

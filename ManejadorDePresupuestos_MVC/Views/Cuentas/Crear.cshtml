@@ -2,24 +2,27 @@
     //V#125 Formulario de Cuentas (Creando la vista de Cuentas)
 *@
 @* --->  Hace ref al CuentaCreacionViewModel*@
-@model DropDownCuentaViewModel 
+@model DropDownCuentaViewModel
 
 @{
     ViewData["Title"] = "Crear Cuenta";
 }
 
-<h1>Crear Cuenta</h1>
-<h5>La cuenta se refiere a los distintos balances que tienes:
-    <strong>Tarjeta de crédito, cuenta de ahorro, préstamo, etc.</strong>
-</h5>
+<div class="mb-3">
+    <h1>Crear Cuenta</h1>
+    <h5>
+        La cuenta se refiere a los distintos balances que tienes:
+        <strong>Tarjeta de crédito, cuenta de ahorro, préstamo, etc.</strong>
+    </h5>
+</div>
 
 <form asp-action="Crear">
     @* Para la validación a nivel de campo del modelo *@
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
     <div class="mb-3">
-        <label asp-for="Nombre" class="form-label"></label>
-        <input type="text" asp-for="Nombre" class="form-control"/>
+        <label asp-for="Nombre" class="form-label fw-bold"></label>
+        <input type="text" asp-for="Nombre" class="form-control" />
         <span asp-validation-for="Nombre" class="text-danger"></span>
     </div>
 
@@ -31,7 +34,7 @@
 
     <div class="mb-3">
         <label asp-for="Balance" class="form-label"></label>
-        <input asp-for="Balance" class="form-control"/>
+        <input asp-for="Balance" class="form-control" />
         <span asp-validation-for="Balance" class="text-danger"></span>
     </div>
 

@@ -11,7 +11,7 @@
     string formatearBalance(decimal balance)
     {
         // return Math.Abs(balance).ToString("N");
-        return Math.Abs(balance).ToString("Q 00,00.00");
+        return Math.Abs(balance).ToString("Q 0,0.00");
     }
 
     //Funcion que obtiene el balance si es mayor a 0 retorna "activo" si es menor a 0 retorna "pasivo"
@@ -19,6 +19,7 @@
     {
         return balance >= 0 ? "activos" : "pasivos";
     }
+
 }
 
 <h1>Cuentas</h1> 
@@ -57,6 +58,7 @@
     </div>
 </div>
 
+
 @* Utilizamos un acordeon de Boostrap (El acordeon permite mostrar elementos en pestañas que se pueden mostrar/ocultar)*@
 <div class="accordion acordeon-cuentas">
     @* Recorre el modelo y con tipoCuenta es posible acceder a cada propiedad *@
@@ -70,11 +72,11 @@
                     //Generar un id dinamico (Son necesarios para mostrar/ocultar los acordeones)
                     var dataBSTarget = "#" + id;
                     //Si el balance es positivo obtener la clase "positivos" y si es negativo obtener la clase "negativos"
-                    var claseTipoCuenta = ObtenerClaseBalance(tipoCuenta.Balance);
+                    var claseTipoCuenta = ObtenerClaseBalance(tipoCuenta.Balance);                    
                 }
 
                 @* Btn del acordeon en donde le pasamos el id del elemento en "data-bs-target" *@
-                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="@dataBSTarget">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="@dataBSTarget">
                 <span class="me-3">
                     @* Obtiene el tipo cuenta y lo muestra en un texto fuerte *@
                     <span><strong>@tipoCuenta.TipoCuenta</strong></span>
@@ -102,6 +104,7 @@
                     </ul>
                 </div>
             </div>
-        </div>
+        </div>        
     }
 </div>
+
