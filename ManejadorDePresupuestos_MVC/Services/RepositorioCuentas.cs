@@ -44,6 +44,11 @@ namespace ManejadorDePresupuestos_MVC.Services
 
 
         //V#127 Indice de Cuentas - Query (Creando método Buscar)
+        /// <summary>
+        /// Obtiene un INNER JOIN entre 2 tablas
+        /// </summary>
+        /// <param name="usuarioId"></param>
+        /// <returns></returns>
         public async Task<IEnumerable<CuentaViewModel>> Buscar(int usuarioId)
         {
             //Establece la conexión
@@ -59,9 +64,46 @@ namespace ManejadorDePresupuestos_MVC.Services
                     FROM Tbl_Cuentas_Sys
                     INNER JOIN Tbl_TiposCuentas_Sys tc
                     ON tc.Id = Tbl_Cuentas_Sys.TipoCuentaId
-                    WHERE TC.UsuarioId = @UsuarioId
-                    ORDER BY TC.Orden", new {usuarioId}); //Pasamos usuarioId que es el que espera para la BD
+                    WHERE tc.UsuarioId = @UsuarioId
+                    ORDER BY tc.Orden", new {usuarioId}); //Pasamos usuarioId que es el que espera para la BD
         }
 
+
+        //V#130 Editando Cuentas - Agregando Íconos a la Aplicación (Creando el modelo ObtenerPorId la Cuenta)
+        //Creando el método Obtener cuenta por id
+        /// <summary>
+        /// Obtiene la cuenta por Id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="usuarioId"></param>
+        /// <returns></returns>
+        public async Task<CuentaViewModel> ObtenerPorIdCuenta(int id, int usuarioId)
+        {
+            //Establece la conexión
+            using var connection = new SqlConnection(connectionString);
+
+            //Obtiene el primer valor que coincida o un valor por defecto se le pasa el id y usuarioId
+            return await connection.QueryFirstOrDefaultAsync<CuentaViewModel>
+                (@"SELECT Tbl_Cuentas_Sys.Id, Tbl_Cuentas_Sys.Nombre, Balance, TipoCuentaId, Descripcion
+                    FROM Tbl_Cuentas_Sys
+                    INNER JOIN Tbl_TiposCuentas_Sys tc
+                    ON tc.Id = Tbl_Cuentas_Sys.TipoCuentaId
+                    WHERE tc.UsuarioId = @UsuarioId AND Tbl_Cuentas_Sys.Id = @Id",
+                    new {id, usuarioId}); //Pasamos usuarioId que es el que espera para la BD
+        }
+
+
+        //V#130 Editando Cuentas - Agregando Íconos a la Aplicación (Creando el método actualizar Cuenta)
+        public async Task Actualizar(DropDownCuentaViewModel dropDownCuentaViewModel)
+        {
+            //Abrimos la conexión
+            using var connection = new SqlConnection(connectionString);
+
+            //Ejecuta la consulta pero no devuelve ningun valor
+            await connection.ExecuteAsync
+                (@"UPDATE Tbl_Cuentas_Sys
+                    SET Nombre = @Nombre, Balance = @Balance, Descripcion = @Descripcion, TipoCuentaId = @TipoCuentaId
+                    WHERE Id = @Id", dropDownCuentaViewModel);
+        }
     }
 }

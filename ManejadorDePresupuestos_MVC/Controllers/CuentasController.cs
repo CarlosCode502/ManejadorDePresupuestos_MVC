@@ -121,6 +121,71 @@ namespace ManejadorDePresupuestos_MVC.Controllers
         }
 
 
+        //V#130 Editando Cuentas - Agregando Íconos a la Aplicación (Creando el action(httpget) Editar)
+        [HttpGet]
+        public async Task<IActionResult> Editar(int id)
+        {
+            //Obtenemos el usarioId
+            var usuarioId = servicioUsuarios.ObtenerUsuarioID();
+
+            //obtenemos el método ObtenerPorIdCuenta (Mandamos los parametros que espera)
+            var cuenta = await repositorioCuentas.ObtenerPorIdCuenta(id, usuarioId);
+
+            //Si no existen registros o el usuarioId no corresponde al Id (cuenta es nulo)
+            if (cuenta is null)
+            {
+                //Va a redirigir a pág de error
+                RedirectToAction("NoEncontrado", "Home"); 
+            }
+
+            //Se construye el modelo que va a recibir/esperar la vista
+            //Los datos que va a obtener se van a asignar a ese mismo modelo
+            var modelo = new DropDownCuentaViewModel()
+            {
+                Id = cuenta.Id,
+                Nombre = cuenta.Nombre,
+                TipoCuentaId = cuenta.TipoCuentaId,
+                Balance = cuenta.Balance,
+                Descripcion = cuenta.Descripcion
+            };
+
+            //Llenamos el dropDowList
+            modelo.TiposCuentas = await ObtenerTiposCuentasPorUsuarioId(usuarioId);
+
+            //devolvemos la vista
+            return View(modelo);
+        }
+
+        //V#130 Editando Cuentas - Agregando Íconos a la Aplicación (Creando el action(httppost) Editar)
+        [HttpPost]
+        public async Task<IActionResult> Editar(DropDownCuentaViewModel dropDownCuentaViewModel)
+        {
+            //Obtenenmos el id 
+            var usuarioId = servicioUsuarios.ObtenerUsuarioID();
+
+            //Obtenemos la cuenta pasandole el id y el usuarioId
+            var cuenta = await repositorioCuentas.ObtenerPorIdCuenta(dropDownCuentaViewModel.Id, usuarioId);
+
+            //Si la cuenta es nulo redirecciona a otra pag
+            if (cuenta is null) {  RedirectToAction("NoEncontrado", "Home"); }
+
+            //obtiene el tipocuenta por tipoCuentaId y usuario id
+            var tipoCuenta = await repositorioCuentas.ObtenerPorIdCuenta(dropDownCuentaViewModel.TipoCuentaId, usuarioId);
+
+            //si tipo cuenta es nulo redirige a otra pag
+            if(tipoCuenta is null)
+            {
+                RedirectToAction("NoEncontrado", "Home");
+            }
+
+            //Una vez obtenidos los datos se utiliza el modelo para 
+            await repositorioCuentas.Actualizar(dropDownCuentaViewModel);
+
+            //Se redirige al index luego de una actualización exitosa
+            return RedirectToAction("Index");
+        }
+
+
         //V#126 Insertar Cuenta (Centralizando un método para obtener los Tipos Cuentas por usuarioId)
         //Esto ya fue creado en el Action Crear(HttpGet) V#125 ahora pasara a ser un método
         private async Task<IEnumerable<SelectListItem>> ObtenerTiposCuentasPorUsuarioId(int usuarioId)
@@ -139,4 +204,3 @@ namespace ManejadorDePresupuestos_MVC.Controllers
     }
 }
 
-//V#126 Insertar Cuenta
