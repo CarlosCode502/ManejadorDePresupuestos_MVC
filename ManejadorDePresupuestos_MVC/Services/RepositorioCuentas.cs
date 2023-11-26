@@ -107,3 +107,8 @@ namespace ManejadorDePresupuestos_MVC.Services
         }
     }
 }
+
+
+//V#131 Utilizando AutoMapper
+//Un mapeador busca centralizar la lógica de copiado de objetos y con esto se evita 
+//repitamos código de mapeo y evita que realizemos el mapeo de manera manual y evitar errores

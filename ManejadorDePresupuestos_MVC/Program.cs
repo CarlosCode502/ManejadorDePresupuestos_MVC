@@ -14,6 +14,9 @@ builder.Services.AddTransient<IServicioUsuarios, ServicioUsuarios>(); //No compa
 //V#126 Insertar Cuenta (Agregando el servicio RepositorioCuentas)
 builder.Services.AddTransient<IRepositorioCuentas, RepositorioCuentas>(); //No comparte instancias a otras clases  
 
+//V#131 Utilizando AutoMapper (Configurando AutoMapper)
+builder.Services.AddAutoMapper(typeof(Program)); //Especificamos el tipo al que ira dirigido el mapeo
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
