@@ -1,4 +1,5 @@
-﻿using ManejadorDePresupuestos_MVC.Models;
+﻿using AutoMapper;
+using ManejadorDePresupuestos_MVC.Models;
 using ManejadorDePresupuestos_MVC.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -17,21 +18,26 @@ namespace ManejadorDePresupuestos_MVC.Controllers
         private readonly IServicioUsuarios servicioUsuarios;
         //V#126 Insertar Cuenta (Inyectando el servicio RepositorioCuentas)
         private readonly IRepositorioCuentas repositorioCuentas;
+        //V#131 Utilizando AutoMapper (Inyectando IMapper de AutoMapper)
+        private readonly IMapper mapper;
 
         //V#125 Formulario de Cuentas (Inyectando dependencias 2 hasta ahora repoTC y serUs)
         //V#126 Insertar Cuenta (Inyectando el servicio RepositorioCuentas)
+        //V#131 Utilizando AutoMapper (Inyectando IMapper de AutoMapper)
         /// <summary>
         /// Inyección de dependencias.
         /// </summary>
         /// <param name="repositorioTiposCuentas">Apunta a la interfaz y antes al repo.</param>
         /// <param name="servicioUsuarios">Apunta a la interfaz y luego al sevicion Obtener usuarioId.</param>
-        public CuentasController(IRepositorioTiposCuentas repositorioTiposCuentas, IServicioUsuarios servicioUsuarios, IRepositorioCuentas repositorioCuentas) 
+        public CuentasController(IRepositorioTiposCuentas repositorioTiposCuentas, IServicioUsuarios servicioUsuarios, IRepositorioCuentas repositorioCuentas, IMapper mapper) 
         {
             //V#125 Formulario de Cuentas (Luego de inyectar dependencias 2 hasta ahora repoTC y serUs)
             this.repositorioTiposCuentas = repositorioTiposCuentas;
             this.servicioUsuarios = servicioUsuarios;
             //V#126 Insertar Cuenta (Inyectando el servicio RepositorioCuentas)
             this.repositorioCuentas = repositorioCuentas;
+            //V#131 Utilizando AutoMapper (Inyectando IMapper de AutoMapper)
+            this.mapper = mapper;
         }
 
 
@@ -129,6 +135,7 @@ namespace ManejadorDePresupuestos_MVC.Controllers
             var usuarioId = servicioUsuarios.ObtenerUsuarioID();
 
             //obtenemos el método ObtenerPorIdCuenta (Mandamos los parametros que espera)
+            //de CuentViewModel
             var cuenta = await repositorioCuentas.ObtenerPorIdCuenta(id, usuarioId);
 
             //Si no existen registros o el usuarioId no corresponde al Id (cuenta es nulo)
@@ -140,14 +147,22 @@ namespace ManejadorDePresupuestos_MVC.Controllers
 
             //Se construye el modelo que va a recibir/esperar la vista
             //Los datos que va a obtener se van a asignar a ese mismo modelo
-            var modelo = new DropDownCuentaViewModel()
-            {
-                Id = cuenta.Id,
-                Nombre = cuenta.Nombre,
-                TipoCuentaId = cuenta.TipoCuentaId,
-                Balance = cuenta.Balance,
-                Descripcion = cuenta.Descripcion
-            };
+            //var modelo = new DropDownCuentaViewModel()
+            //{
+            //    Id = cuenta.Id,
+            //    Nombre = cuenta.Nombre,
+            //    TipoCuentaId = cuenta.TipoCuentaId,
+            //    Balance = cuenta.Balance,
+            //    Descripcion = cuenta.Descripcion
+            //};
+
+            //SUSTITUYE A LO DE ARRIBA CON AM
+            //V#131 Utilizando AutoMapper (Utilizando AutoMapper para mapear)
+            //nuevoMapeo<Hacia donde voy a mappearDDCVM>(cuentaorigenCuentaVM)
+            //La ventaja de utilizar AutoMapper es que evitamos que se olviden escribir
+            //o asignar campos y es menos código
+            var modelo = mapper.Map<DropDownCuentaViewModel>(cuenta);
+
 
             //Llenamos el dropDowList
             modelo.TiposCuentas = await ObtenerTiposCuentasPorUsuarioId(usuarioId);
