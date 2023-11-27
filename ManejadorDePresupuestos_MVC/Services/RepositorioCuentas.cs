@@ -105,10 +105,20 @@ namespace ManejadorDePresupuestos_MVC.Services
                     SET Nombre = @Nombre, Balance = @Balance, Descripcion = @Descripcion, TipoCuentaId = @TipoCuentaId
                     WHERE Id = @Id", dropDownCuentaViewModel);
         }
+
+        //V#131 Borrando Cuentas (Creando método para borrar Cuenta)
+        public async Task Borrar(int id)
+        {
+            //Abrimos la conexión
+            using var connection = new SqlConnection(connectionString);
+
+            //Elimina el  elemento de la tabla cuenta que corresponda al id recibido
+            await connection.ExecuteAsync
+                (@"DELETE Tbl_Cuentas_Sys 
+                    WHERE Id = @Id", new { id }); //Pasamos el id con un obj anónimo
+        }
     }
 }
 
 
-//V#131 Utilizando AutoMapper
-//Un mapeador busca centralizar la lógica de copiado de objetos y con esto se evita 
-//repitamos código de mapeo y evita que realizemos el mapeo de manera manual y evitar errores
+//V#131 Borrando Cuentas

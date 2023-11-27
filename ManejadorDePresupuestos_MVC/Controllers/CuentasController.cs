@@ -29,7 +29,7 @@ namespace ManejadorDePresupuestos_MVC.Controllers
         /// </summary>
         /// <param name="repositorioTiposCuentas">Apunta a la interfaz y antes al repo.</param>
         /// <param name="servicioUsuarios">Apunta a la interfaz y luego al sevicion Obtener usuarioId.</param>
-        public CuentasController(IRepositorioTiposCuentas repositorioTiposCuentas, IServicioUsuarios servicioUsuarios, IRepositorioCuentas repositorioCuentas, IMapper mapper) 
+        public CuentasController(IRepositorioTiposCuentas repositorioTiposCuentas, IServicioUsuarios servicioUsuarios, IRepositorioCuentas repositorioCuentas, IMapper mapper)
         {
             //V#125 Formulario de Cuentas (Luego de inyectar dependencias 2 hasta ahora repoTC y serUs)
             this.repositorioTiposCuentas = repositorioTiposCuentas;
@@ -68,7 +68,7 @@ namespace ManejadorDePresupuestos_MVC.Controllers
 
         //V#125 Formulario de Cuentas (Creando el Controlador y Action Cuentas)
         [HttpGet]
-        public async Task<IActionResult> Crear() 
+        public async Task<IActionResult> Crear()
         {
             //Obtener el Id del usuario desde el servicio.
             var usuarioId = servicioUsuarios.ObtenerUsuarioID();
@@ -90,7 +90,7 @@ namespace ManejadorDePresupuestos_MVC.Controllers
             modelo.TiposCuentas = await ObtenerTiposCuentasPorUsuarioId(usuarioId);
 
             //Se manda el modelo a la vista
-            return View(modelo); 
+            return View(modelo);
         }
 
         //V#126 Insertar Cuenta (Action Crear)
@@ -111,7 +111,7 @@ namespace ManejadorDePresupuestos_MVC.Controllers
             }
 
             //Si el tipoCuenta no es nulo (Se verifica si el usuario no es válido)
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 //Obtener los tipos cuentas del usuario para cargar la vista
                 dropDownCuentaViewModel.TiposCuentas = await ObtenerTiposCuentasPorUsuarioId(usuarioId);
@@ -142,7 +142,7 @@ namespace ManejadorDePresupuestos_MVC.Controllers
             if (cuenta is null)
             {
                 //Va a redirigir a pág de error
-                RedirectToAction("NoEncontrado", "Home"); 
+                RedirectToAction("NoEncontrado", "Home");
             }
 
             //Se construye el modelo que va a recibir/esperar la vista
@@ -182,13 +182,13 @@ namespace ManejadorDePresupuestos_MVC.Controllers
             var cuenta = await repositorioCuentas.ObtenerPorIdCuenta(dropDownCuentaViewModel.Id, usuarioId);
 
             //Si la cuenta es nulo redirecciona a otra pag
-            if (cuenta is null) {  RedirectToAction("NoEncontrado", "Home"); }
+            if (cuenta is null) { RedirectToAction("NoEncontrado", "Home"); }
 
             //obtiene el tipocuenta por tipoCuentaId y usuario id
             var tipoCuenta = await repositorioCuentas.ObtenerPorIdCuenta(dropDownCuentaViewModel.TipoCuentaId, usuarioId);
 
             //si tipo cuenta es nulo redirige a otra pag
-            if(tipoCuenta is null)
+            if (tipoCuenta is null)
             {
                 RedirectToAction("NoEncontrado", "Home");
             }
@@ -200,7 +200,44 @@ namespace ManejadorDePresupuestos_MVC.Controllers
             return RedirectToAction("Index");
         }
 
+        //V#131 Borrando Cuentas (Creando action HttpGet para obtener el registro a borrar)
+        [HttpGet]
+        public async Task<IActionResult> Borrar(int id)
+        {
+            //Obtenemos el usuarioId
+            var usuarioId = servicioUsuarios.ObtenerUsuarioID();
 
+            //Va a servir para validar si la cuenta corresponde al id y usuarioId
+            var cuenta = await repositorioCuentas.ObtenerPorIdCuenta(id, usuarioId);
+
+            //Valida si el usuario existe si es nulo o no y redirige si es nulo
+            if (cuenta is null) { RedirectToAction("NoEncontrado", "Home"); }
+
+            //Enviamos la cuenta del usuario a la vista
+            return View(cuenta);
+        }
+
+        //V#131 Borrando Cuentas (Creando el action HttpPost para eliminar)
+        [HttpPost]
+        public async Task<IActionResult> BorrarCuenta(int id)
+        {
+            //Obtiene el id del usuario
+            var usuarioId = servicioUsuarios.ObtenerUsuarioID();
+
+            //Obtiene los registros que correspondan a id y usuarioId
+            var cuenta = await repositorioCuentas.ObtenerPorIdCuenta(id, usuarioId);
+
+            //Verifica si cuenta es nulo redirige a pag de error
+            if (cuenta is null) { RedirectToAction("NoEncontrado", "Error"); }
+
+            //si cuenta no es nulo se ejecuta el método borrar y se le pasa el id del registro (lo req el método)
+            await repositorioCuentas.Borrar(id);
+
+            //Si se elimina exitosamente se redirige al usuario al Index
+            return RedirectToAction("Index");
+        }
+        
+        
         //V#126 Insertar Cuenta (Centralizando un método para obtener los Tipos Cuentas por usuarioId)
         //Esto ya fue creado en el Action Crear(HttpGet) V#125 ahora pasara a ser un método
         private async Task<IEnumerable<SelectListItem>> ObtenerTiposCuentasPorUsuarioId(int usuarioId)
