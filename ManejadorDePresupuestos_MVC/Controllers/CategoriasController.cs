@@ -63,5 +63,61 @@ namespace ManejadorDePresupuestos_MVC.Controllers
             //Si todo es correcto redirige al index
             return RedirectToAction("Index");
         }
+
+        //V#136 Editar Categorías (Action Editar HttPost min 02.45)
+        [HttpGet]
+        public async Task<IActionResult> Editar(int id)
+        {
+            //Obtiene el usuarioId del servicio
+            var usuarioId = servicioUsuarios.ObtenerUsuarioID();
+
+            //Obtiene las categorias según id y UsuarioId
+            var categoria = await repositorioCategorias.ObtenerPorIdCategoria(id, usuarioId); 
+
+            //Si categoria es nulo no existen o no son válidos
+            if (categoria is null)
+            {
+                //Redirige a pag de error
+                RedirectToAction("NoEncontrado", "Home");
+            }
+
+            //Envia el modelo a la vista
+            return View(categoria);
+        }
+
+        //V#136 Editar Categorías (Método Editar HttpPost min 03.40)
+        [HttpPost]
+        public async Task<IActionResult> Editar(CategoriaViewModel categoriaViewModel)
+        {
+            //Verificamos si el modelo no es valido entonces retornamos la vista con los datos erroneos ingresados
+            if(!ModelState.IsValid)
+            {
+                return View(categoriaViewModel);
+            }
+
+            //Obtiene el usuarioId del servicio
+            var usuarioId = servicioUsuarios.ObtenerUsuarioID();
+
+            //Obtiene las categorias según id y UsuarioId
+            var categoria = await repositorioCategorias.ObtenerPorIdCategoria(categoriaViewModel.Id, usuarioId);
+
+            //Si categoria es nulo no existen o no son válidos
+            if (categoria is null)
+            {
+                //Redirige a pag de error
+                RedirectToAction("NoEncontrado", "Home");
+            }
+
+            //El id del usuario categoria le pasamos el usuarioid obtenido
+            categoriaViewModel.UsuarioId = usuarioId;
+
+            //Ejecutamos el método Actualizar pasandole los nuevos valores del modelo
+            await repositorioCategorias.Actualizar(categoriaViewModel);
+
+            //Retornamos a la vista nuevamente
+            return RedirectToAction("Index");
+        }
+
+
     }
 }

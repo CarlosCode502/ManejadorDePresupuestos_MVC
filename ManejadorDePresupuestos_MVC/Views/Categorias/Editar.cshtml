@@ -1,0 +1,43 @@
+﻿@*
+    //V#136 Editar Categorías (Vista Editar min 05.04)
+*@
+
+@model CategoriaViewModel
+
+@{
+    ViewData["Title"] = "Editar Categoría";
+}
+
+<h1>Editar Categoría</h1>
+<h5>La categoría nos permite indicar en que gastamos nuestro dinero, también, de donde provienen nuestros ingresos.</h5>
+
+<form asp-action="Editar">
+    @* Solo validaciones a nivel de modelo *@
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    @* Campo Id (oculto para el usuario) *@
+    <input type="hidden" asp-for="Id"/>
+
+    <div class="mb-3">
+        <label asp-for="NombreCategoria" class="form-label"></label>
+        <input asp-for="NombreCategoria" class="form-control" />
+        <span asp-validation-for="NombreCategoria" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="TipoOperacionId" class="form-label"></label>
+        @* Utilizar una tecnica especial que permite crear un SelectListItem a partir de un Enum *@
+        @* GetEnumSelectList optiene el Enum que es TipoOperacionEnum y TipoOperacionId es el campo *@
+        <select asp-for="TipoOperacionId" asp-items="Html.GetEnumSelectList<TipoOperacionEnum>()"
+                class="form-select"></select>
+        <span asp-validation-for="TipoOperacionId" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guradar</button>
+    <a asp-action="Index" class="btn btn-danger">Cancelar</a>
+
+</form>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial.cshtml" />
+}

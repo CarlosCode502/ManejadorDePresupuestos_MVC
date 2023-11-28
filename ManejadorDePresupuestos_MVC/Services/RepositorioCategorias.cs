@@ -43,5 +43,36 @@ namespace ManejadorDePresupuestos_MVC.Services
                 (@"SELECT * FROM Tbl_Categorias_Sys 
                     WHERE UsuarioId = @UsuarioId;", new { usuarioId });
         }
+
+
+        //V#136 Editar Categorías (Método ObtenerPorIdCategoria min 00.50)
+        public async Task<CategoriaViewModel> ObtenerPorIdCategoria(int id, int usuarioId)
+        {
+            //Abre o obtiene la conexión
+            using var connection = new SqlConnection(connectionString);
+
+            //QueryFirstOrDefaultAsync Obten lo primero que encuentres o un valor por defecto si es 0
+            //Obtiene las categorias que corespondan al Id y UsuarioId
+            return await connection.QueryFirstOrDefaultAsync<CategoriaViewModel>
+                (@"SELECT * FROM Tbl_Categorias_Sys 
+                    WHERE Id = @Id AND UsuarioId = @UsuarioId", new { id, usuarioId } ); 
+            //Cuando no le paso los paramentros sale un
+            //Error de tipo "An unhandled exception occurred while processing the request."
+        }
+
+
+        //V#136 Editar Categorías (Método Actualizar min 01.50)
+        public async Task Actualizar(CategoriaViewModel categoriaViewModel)
+        {
+            //Conexión
+            using var connection = new SqlConnection(connectionString);
+
+            //Realiza una consulta a la Bd de tipo Update a la tabla Categorias cuando el Id sea = @Id
+            await connection.ExecuteAsync
+                (@"UPDATE Tbl_Categorias_Sys
+                    SET NombreCategoria = @NombreCategoria, TipoOperacionId = @TipoOperacionId
+                    WHERE Id = @Id", categoriaViewModel);
+        }
+
     }
 }
