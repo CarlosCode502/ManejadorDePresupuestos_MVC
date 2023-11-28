@@ -74,5 +74,17 @@ namespace ManejadorDePresupuestos_MVC.Services
                     WHERE Id = @Id", categoriaViewModel);
         }
 
+        //V#137 Borrar Categorias (Creando método borrar categoria min 0.40)
+        public async Task Borrar(int id)
+        {
+            //Conexión
+            using var connection = new SqlConnection(connectionString);
+
+            //Query para eliminar un registro de Categoria Según id
+            await connection.ExecuteAsync
+                (@"DELETE Tbl_Categorias_Sys
+                    WHERE Id = @Id", new { id });
+        }
+
     }
 }

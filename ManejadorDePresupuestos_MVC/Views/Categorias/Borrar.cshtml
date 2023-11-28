@@ -1,0 +1,18 @@
+﻿@*
+    //V#137 Borrar Categorias (Creando Vista Borrar Categoria min 02.15)
+*@
+
+@model CategoriaViewModel
+
+@{
+    ViewData["Title"] = "Borrar Categoría";
+}
+
+<h3 class="mb-3">¿Está seguro que desea borrar el tipo cuenta <strong>@Model.NombreCategoria?</strong></h3>
+
+@* asp-action contiene el nombre de la action (HTTPPOST)*@
+<form asp-action="BorrarCategoria">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Borrar</button>
+    <a class="btn btn-secondary" asp-action="Index">Cancelar</a>
+</form>

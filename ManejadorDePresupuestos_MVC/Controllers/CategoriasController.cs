@@ -119,5 +119,41 @@ namespace ManejadorDePresupuestos_MVC.Controllers
         }
 
 
+        //V#137 Borrar Categorias (Creando action httpget borrar categoria min 01.50)
+        [HttpGet]
+        public async Task<IActionResult> Borrar(int id)
+        {
+            //Obtenemos el id
+            var usuarioId = servicioUsuarios.ObtenerUsuarioID();
+
+            //Obtener la categoria por id y usuarioId
+            var categoria = await repositorioCategorias.ObtenerPorIdCategoria(id, usuarioId);
+
+            //Verifica si categoria es nulo retorna a pag de error
+            if(categoria is null) { RedirectToAction("NoEncontrado","Home"); }
+
+            //Manda el modelo con datos a la vista
+            return View(categoria);
+        }
+
+        //V#137 Borrar Categorias (Creando action httpPost borrar categoria min 02.30)
+        [HttpPost]
+        public async Task<IActionResult> BorrarCategoria(int id)
+        {
+            //UsuarioId
+            var usuarioId = servicioUsuarios.ObtenerUsuarioID();
+
+            //Obtener la categoria por id y usuarioId
+            var categoria = await repositorioCategorias.ObtenerPorIdCategoria(id, usuarioId);
+
+            //Verifica si categoria es nulo retorna a pag de error
+            if (categoria is null) { RedirectToAction("NoEncontrado", "Home"); }
+
+            //Accede al método para borrar un registro de categorias pasandole el Id correspondiente
+            await repositorioCategorias.Borrar(id);
+
+            //Redirige a la vista index
+            return RedirectToAction("Index");
+        }
     }
 }

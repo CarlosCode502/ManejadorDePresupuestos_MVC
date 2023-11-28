@@ -7,6 +7,9 @@ namespace ManejadorDePresupuestos_MVC.Services
         //V#136 Editar Categorías (Método Actualizar min 01.50)
         Task Actualizar(CategoriaViewModel categoriaViewModel);
 
+        //V#137 Borrar Categorias (Creando método borrar categoria min 0.55)
+        Task Borrar(int id);
+
         //V#133 Creando Categorias (Agregando a la interfaz)
         Task Crear(CategoriaViewModel categoriaViewModel);
 
