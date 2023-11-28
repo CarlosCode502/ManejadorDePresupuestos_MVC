@@ -30,5 +30,18 @@ namespace ManejadorDePresupuestos_MVC.Services
                     VALUES (@NombreCategoria, @TipoOperacionId, @UsuarioId);
                     SELECT SCOPE_IDENTITY();", categoriaViewModel); //Para obtener el id
         }
+
+        //V#135 Indice de Categorias (Creando método Mostrar 00.35)
+        //Para obtener las categorias de un usuario en especifico
+        public async Task<IEnumerable<CategoriaViewModel>> Obtener(int usuarioId)
+        {
+            //Abre la conexión
+            using var connection = new SqlConnection(connectionString);
+
+            //Realiza una consulta para obtener todos los registros de la tabla Categorias
+            return await connection.QueryAsync<CategoriaViewModel>
+                (@"SELECT * FROM Tbl_Categorias_Sys 
+                    WHERE UsuarioId = @UsuarioId;", new { usuarioId });
+        }
     }
 }

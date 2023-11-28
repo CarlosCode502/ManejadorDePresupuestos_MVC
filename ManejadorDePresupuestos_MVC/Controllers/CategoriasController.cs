@@ -19,6 +19,20 @@ namespace ManejadorDePresupuestos_MVC.Controllers
             this.servicioUsuarios = servicioUsuarios;
         }
 
+        //V#135 Indice de Categorias (Creando método Mostrar 01.50)
+        [HttpGet]
+        public async Task<IActionResult> Index()
+        {
+            //Obtener el usuarioId
+            var usuarioId = servicioUsuarios.ObtenerUsuarioID();
+
+            //Obtener las categorias de ese usuarioId
+            var categorias = await repositorioCategorias.Obtener(usuarioId);
+
+            //Devuelve el modelo hacia la vista
+            return View(categorias);
+        }
+
         //V#133 Creando Categorias (Creando el action HttpGet Crear Categorias min 04:50)
         [HttpGet]
         public IActionResult Crear()
