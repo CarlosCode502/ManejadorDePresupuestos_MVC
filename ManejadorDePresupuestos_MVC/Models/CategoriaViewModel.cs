@@ -17,7 +17,7 @@ namespace ManejadorDePresupuestos_MVC.Models
 
         //Debe poder elegir el tipodeOperación
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
-        public TipoOperacionEnum TipoOperacionId { get; set; }
+        public TipoOperacionEnum TipoOperacionId { get; set; } //Col TipoOperacionId
 
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public int UsuarioId { get; set; }

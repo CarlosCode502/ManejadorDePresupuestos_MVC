@@ -17,6 +17,9 @@ builder.Services.AddTransient<IRepositorioCuentas, RepositorioCuentas>(); //No c
 //V#131 Utilizando AutoMapper (Configurando AutoMapper)
 builder.Services.AddAutoMapper(typeof(Program)); //Especificamos el tipo al que ira dirigido el mapeo
 
+//V#133 Creando Categorias (Creando el servicio RepoCategorias min 05:40)
+builder.Services.AddTransient<IRepositorioCategorias, RepositorioCategorias>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
