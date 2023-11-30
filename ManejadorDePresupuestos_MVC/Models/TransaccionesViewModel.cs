@@ -9,9 +9,15 @@ namespace ManejadorDePresupuestos_MVC.Models
         //Necesitamos realizar validaciones
         public int Id { get; set; }
 
-        public int UsuarioId { get; set; }  
+        public int UsuarioId { get; set; }
 
-        public DateTime FechaTransaccion { get; set; } = DateTime.Today;
+        //V#139 Trabajando con fechas en un formulario (Especificando formato hora en el modelo min 03.00)
+        //[DataType(DataType.Date)] //Solo mostrar Fecha
+        [DataType(DataType.DateTime)] //Fecha y hora completo especifico
+        [DisplayName("Fecha Transacción")]
+        public DateTime FechaTransaccion { get; set; } = DateTime.Today; //No nos interesa la hora
+        //= DateTime.Parse(DateTime.Now.ToString("g")); //Menú Optimizado
+        //= DateTime.Parse(DateTime.Now.ToString("yyyy-MM-dd hh:MM tt")); //(Menú Fecha y Hora según navegador)   
 
         [Required(ErrorMessage = "El campo {0} es requerido.")]
         public decimal Monto { get; set; }
