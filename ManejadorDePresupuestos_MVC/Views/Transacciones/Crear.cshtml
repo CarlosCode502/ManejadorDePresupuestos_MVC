@@ -20,6 +20,38 @@
         <input asp-for="FechaTransaccion" class="form-control"/>
         <span asp-validation-for="FechaTransaccion" class="text-danger"></span>
     </div>
+
+    @* //V#140 Agregando los demás campos (Agregando campos faltantes en la vista crear transacción min 00.30) *@
+    <div class="mb-3">
+        @* Agregando el Selec de Cuenta ID *@
+        <label asp-for="CuentaId" class="form-label"></label>
+        <select asp-for="CuentaId" asp-items="Model.Cuentas" class="form-select"></select>
+        <span asp-validation-for="CuentaId" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        @* Cargando el tipo operacionId en un SelectList con HtmlHelper *@
+        <label asp-for="TipoOperacionId" class="form-label"></label>
+        <select asp-for="TipoOperacionId" asp-items="Html.GetEnumSelectList<TipoOperacionEnum>()" class="form-select"></select>
+        <span asp-validation-for="TipoOperacionId" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        @* Agregando el CategoriaId*@
+        <label asp-for="CategoriaId" class="form-label"></label>
+        <select asp-for="CategoriaId" class="form-select"></select>
+        <span asp-validation-for="CategoriaId" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        @* Agregando el Monto*@
+        <label asp-for="Monto" class="form-label"></label>
+        <input asp-for="Monto" class="form-control" />
+        <span asp-validation-for="Monto" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        @* Agregando el Monto*@
+        <label asp-for="Observaciones" class="form-label"></label>
+        <input asp-for="Monto" class="form-control" />
+        <span asp-validation-for="Monto" class="text-danger"></span>
+    </div>
 </form>
 
 @section Scripts {

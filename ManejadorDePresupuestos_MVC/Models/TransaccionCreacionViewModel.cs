@@ -10,5 +10,8 @@ namespace ManejadorDePresupuestos_MVC.Models
 
         //Va a contener las Categorias del usuario en un SelectListItem
         public IEnumerable<SelectListItem> Categorias { get; set; }
+
+        //V#140 Agregando los demás Campos (Agregando la propiedad TiposCuentas min 01.26) 
+        public TipoOperacionEnum TipoOperacionId { get; set; }
     }
 }
