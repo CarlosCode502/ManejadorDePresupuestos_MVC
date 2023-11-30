@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace ManejadorDePresupuestos_MVC.Models
 {
@@ -12,6 +14,9 @@ namespace ManejadorDePresupuestos_MVC.Models
         public IEnumerable<SelectListItem> Categorias { get; set; }
 
         //V#140 Agregando los demás Campos (Agregando la propiedad TiposCuentas min 01.26) 
+        //Es importante ya que las cat se van a mostrar los tipos operación (Gastos o Ingresos)
+        [Required(ErrorMessage = "El campo {0} es requerido.")]
+        [DisplayName("Tipo de Operación")]
         public TipoOperacionEnum TipoOperacionId { get; set; }
     }
 }
