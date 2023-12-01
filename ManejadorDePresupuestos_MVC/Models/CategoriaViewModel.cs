@@ -12,7 +12,7 @@ namespace ManejadorDePresupuestos_MVC.Models
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         [PrimerLetraMayuscula]
         [StringLength(maximumLength:50, ErrorMessage = "No puede ser mayor a {1} caracteres")]
-        [DisplayName("Nombre de Categoria")]
+        [DisplayName("Nombre de Categoría")]
         public string NombreCategoria { get; set; }
 
         //Debe poder elegir el tipodeOperación

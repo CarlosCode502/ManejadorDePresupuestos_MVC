@@ -41,7 +41,7 @@ namespace ManejadorDePresupuestos_MVC.Services
             //Realiza una consulta para obtener todos los registros de la tabla Categorias
             return await connection.QueryAsync<CategoriaViewModel>
                 (@"SELECT * FROM Tbl_Categorias_Sys 
-                    WHERE UsuarioId = @UsuarioId;", new { usuarioId });
+                    WHERE UsuarioId = @UsuarioId", new { usuarioId });
         }
 
 
@@ -86,5 +86,19 @@ namespace ManejadorDePresupuestos_MVC.Services
                     WHERE Id = @Id", new { id });
         }
 
+
+        //V#141 DropDown Cascada (Método que permita obtener las categorias según usuarioId y tipoOperacion min 04.50)
+        public async Task<IEnumerable<CategoriaViewModel>> ObtenerPorUsuarioIdyTipoOperacion(int usuarioId, TipoOperacionEnum tipoOperacionId)
+        {
+            //Obtiene la conexion
+            using var connection = new SqlConnection(connectionString);
+
+            //Retorna los registros de la tabla categorias que correspondan a usuario id y tipoOperaciónId
+            return await connection.QueryAsync<CategoriaViewModel>
+                (@"SELECT * FROM Tbl_Categorias_Sys 
+                    WHERE UsuarioId = @UsuarioId
+                    AND TipoOperacionId = @TipoOperacionId",
+                    new { usuarioId, tipoOperacionId });
+        }
     }
 }

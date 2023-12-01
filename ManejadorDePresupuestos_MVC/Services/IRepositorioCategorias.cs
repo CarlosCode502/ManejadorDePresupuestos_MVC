@@ -18,5 +18,8 @@ namespace ManejadorDePresupuestos_MVC.Services
 
         //V#136 Editar Categorías (Método ObtenerPorIdCategoria min 00.50)
         Task<CategoriaViewModel> ObtenerPorIdCategoria(int id, int usuarioId);
+
+        //V#141 DropDown Cascada (Método que permita obtener las categorias según usuarioId y tipoOperacion min 04.50)
+        Task<IEnumerable<CategoriaViewModel>> ObtenerPorUsuarioIdyTipoOperacion(int usuarioId, TipoOperacionEnum tipoOperacionId);
     }
 }

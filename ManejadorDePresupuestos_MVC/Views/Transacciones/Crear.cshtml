@@ -17,7 +17,7 @@
     <div class="mb-3">
         <label asp-for="FechaTransaccion" class="form-label"></label>
         @* //V#139 Trabajando con fechas en un formulario (Para no mostrar hora se debe hacer a nivel de modelo min 02.50) *@
-        <input asp-for="FechaTransaccion" class="form-control"/>
+        <input asp-for="FechaTransaccion" class="form-control" />
         <span asp-validation-for="FechaTransaccion" class="text-danger"></span>
     </div>
 
@@ -38,13 +38,13 @@
     <div class="mb-3">
         @* Agregando el CategoriaId*@
         <label asp-for="CategoriaId" class="form-label"></label>
-        <select asp-for="CategoriaId" class="form-select"></select>
+        <select asp-for="CategoriaId" asp-items="Model.Categorias" class="form-select"></select>
         <span asp-validation-for="CategoriaId" class="text-danger"></span>
     </div>
     <div class="mb-3">
         @* Agregando el Monto*@
         <label asp-for="Monto" class="form-label"></label>
-        <input asp-for="Monto" class="form-control"/>
+        <input asp-for="Monto" class="form-control" />
         <span asp-validation-for="Monto" class="text-danger"></span>
     </div>
     <div class="mb-3">
@@ -60,4 +60,48 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+
+    @* //V#141 DropDown Cascada (Creando un dropdown que depende de otro min 01.00) *@
+    @* //Creando una función que carge los datos según otro dropdown seleccionado *@
+
+    <script>
+
+        //Obteniendo la url del método ObtenerCategorias2 min 06.50
+        const urlObtenerCategorias = '@Url.Action("ObtenerCategorias2")';
+
+
+        //Agregar etiqueta script para evitar el texto plano
+        $(function(){
+            //Obtenemos el id del control(el id del campo Tipo de operación)
+            $("#TipoOperacionId").change(async function () {
+                //Creamos una constante y obtenemos un valor
+                const valorSeleccionado = $(this).val();
+
+                //Utilizamos el fetch api
+                //Asignando la url obtenida 07.03
+                const respuesta = await fetch(urlObtenerCategorias, { //Error aquí lo tenía entre comillas simples
+                    method: 'POST',
+                    body: valorSeleccionado,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                //Va contener la respuesta del fetch api en formato json
+                const json = await respuesta.json();
+
+                //Lo mostramos en un log
+                //Muestra un arreglo de objetos (es decir los elementos de la categoria seleccionada)
+                // console.log(json);
+
+                //Llenar el select con toda la info obtenida segun seleccion
+                const opciones =
+                    //Transformar las categorias en options usando backsticks (alt + 96)
+                    json.map(categoria => `<option value =${categoria.value}>${categoria.text}</option>`);
+                $("#CategoriaId").html(opciones);
+                //Insertando el arreglo de categorias en html directo al id de #CategoriaId
+                //(Nombre del campo más arriba)
+            })
+        })
+    </script>
 }

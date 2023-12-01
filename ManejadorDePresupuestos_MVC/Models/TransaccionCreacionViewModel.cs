@@ -17,6 +17,6 @@ namespace ManejadorDePresupuestos_MVC.Models
         //Es importante ya que las cat se van a mostrar los tipos operación (Gastos o Ingresos)
         [Required(ErrorMessage = "El campo {0} es requerido.")]
         [DisplayName("Tipo de Operación")]
-        public TipoOperacionEnum TipoOperacionId { get; set; }
+        public TipoOperacionEnum TipoOperacionId { get; set; } = TipoOperacionEnum.Gastos; //Simular que se elije uno
     }
 }
