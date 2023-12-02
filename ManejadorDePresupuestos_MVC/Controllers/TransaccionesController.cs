@@ -13,14 +13,18 @@ namespace ManejadorDePresupuestos_MVC.Controllers
         private readonly IRepositorioCuentas repositorioCuentas;
         //V#141 DropDown Cascada (Creando propiedad 04.05)
         private readonly IRepositorioCategorias repositorioCategorias;
+        //V#142 Insertando la Transacción (IAction Crear Transaccion HttpPost min 02.40)
+        private readonly IRepositorioTransacciones repositorioTransacciones;
 
-        public TransaccionesController(IServicioUsuarios servicioUsuarios, IRepositorioCuentas repositorioCuentas, IRepositorioCategorias repositorioCategorias) 
+        public TransaccionesController(IServicioUsuarios servicioUsuarios, IRepositorioCuentas repositorioCuentas, IRepositorioCategorias repositorioCategorias, IRepositorioTransacciones repositorioTransacciones) 
         {
             //V#138 Creando Transacciones (Asignando a campo  09.30)
             this.servicioUsuarios = servicioUsuarios;
             this.repositorioCuentas = repositorioCuentas;
             //V#141 DropDown Cascada (Creando propiedad 04.05)
             this.repositorioCategorias = repositorioCategorias;
+            //V#142 Insertando la Transacción (IAction Crear Transaccion HttpPost min 02.40)
+            this.repositorioTransacciones = repositorioTransacciones;
         }
 
         public IActionResult Index()
@@ -49,6 +53,58 @@ namespace ManejadorDePresupuestos_MVC.Controllers
             //Retornamos a la vista el modelo.
             return View(modelo);
         }
+
+
+        //V#142 Insertando la Transacción (IAction Crear Transaccion HttpPost min 00.50)
+        [HttpPost]
+        public async Task<IActionResult> Crear(TransaccionCreacionViewModel modelo)
+        {
+            //Obtener usuarioId
+            var usuarioId = servicioUsuarios.ObtenerUsuarioID();
+
+            //Si el modelo no es valido por x o y razon
+            if(!ModelState.IsValid)
+            {
+                //Cuentas obtiene las cuentas que correspondel al usuarioId
+                modelo.Cuentas = await ObtenerCuentas(usuarioId);
+
+                //Obtiene las categgorias que recibe el usuarioId y tipoOperacion enum
+                modelo.Categorias = await ObtenerCategorias1(usuarioId, modelo.TipoOperacionId); //TipoOperación ya contiene un valor por defecto = 2 por ahora
+
+                //Retorna el modelo nuevamente
+                return View(modelo);
+            }
+
+            //obtiene la cuenta por usuario id y cuenta
+            var cuenta = await repositorioCuentas.ObtenerPorIdCuenta(modelo.CuentaId, usuarioId);
+
+            //Verifica si la cuenta corresponde al usuarioid
+            if(cuenta is null) { RedirectToAction("NoEncontrado", "Home"); }
+
+
+            //Obtiene la categoria segun idcategoria y usuarioId
+            var categoria = await repositorioCategorias.ObtenerPorIdCategoria(modelo.CategoriaId, usuarioId);
+
+            //Verifica si categoria es nulo
+            if (categoria is null) { RedirectToAction("NoEncontrado", "Home"); }
+
+            //El campo usuarioId del modelo sera igual al usuario id obtenido
+            modelo.UsuarioId = usuarioId;   
+
+            //Verifia si la propiedad tipo operación es igual a un gasto
+            if(modelo.TipoOperacionId == TipoOperacionEnum.Gastos) 
+            {
+                //Si es un gasto se multiplicara por -1 para tener el mismo valor pero en negativo
+                modelo.Monto *= -1;
+            }
+
+            //Ejecutamos la accion crear y le pasamos el modelo con los datos que recibe
+            await repositorioTransacciones.Crear(modelo);
+
+            //Redirige a la vista Index
+            return RedirectToAction("Index");
+        }
+
 
         //V#138 Creando Transacciones (Método privado min 11.10)
         private async Task<IEnumerable<SelectListItem>> ObtenerCuentas(int usuarioId)
